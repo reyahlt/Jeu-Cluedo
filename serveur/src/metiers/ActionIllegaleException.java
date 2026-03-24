@@ -1,4 +1,7 @@
 package metiers;
 
-public class ActionIllegaleException {
+public class ActionIllegaleException extends Exception {
+    public ActionIllegaleException(String s) {
+        super(s);
+    }
 }

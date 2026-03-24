@@ -1,44 +1,51 @@
 package cluedo.histoire;
 
+import metiers.Carte;
+import metiers.Joueur;
+
 import java.util.Objects;
 
 public class Soupcon  {
-    private final ELieu lieu;
-    private final EPersonnage personnage;
-    private final EArme arme;
+    private Joueur joueur;
+    private  ELieu lieu;
+    private  EPersonnage personnage;
+    private  EArme arme;
+    private Carte carteMontrée; //null sinon
+    private Joueur joueurRepondant; //qui montre la carte
 
-    public Soupcon(ELieu lieu, EPersonnage personnage, EArme arme) {
-        this.lieu = lieu;
+
+    /**
+     * soupçon.
+     *
+     * @param auteur     le joueur qui soupçonne
+     * @param personnage le personnage soupçonné
+     * @param lieu       le lieu soupçonné
+     * @param arme       l'arme soupçonnée
+     */
+    public Soupcon(Joueur auteur, EPersonnage personnage, ELieu lieu, EArme arme) {
+        if (auteur == null || personnage == null || lieu == null || arme == null)
+            throw new IllegalArgumentException("Les paramètres du soupçon sont obligatoires.");
+        this.joueur = auteur;
         this.personnage = personnage;
+        this.lieu = lieu;
         this.arme = arme;
     }
+    public Joueur getAuteur()          { return joueur; }
+    public EPersonnage getPersonnage() { return personnage; }
+    public ELieu getLieu()             { return lieu; }
+    public EArme getArme()             { return arme; }
+    public Carte getCarteMontrée()     { return carteMontrée; }
+    public Joueur getJoueurRepondant() { return joueurRepondant; }
 
-    public EPersonnage getPersonnage() {
-        return personnage;
-    }
-
-    public ELieu getLieu() {
-        return lieu;
-    }
-
-    public EArme getArme() {
-        return arme;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Soupcon soupcon = (Soupcon) o;
-        return lieu == soupcon.lieu && personnage == soupcon.personnage && arme == soupcon.arme;
+    public void enregistrerReponse(Carte carte, Joueur joueur) {
+        this.carteMontrée = carte;
+        this.joueurRepondant = joueur;
     }
 
     @Override
-    public int hashCode() {
-        int result = Objects.hashCode(lieu);
-        result = 31 * result + Objects.hashCode(personnage);
-        result = 31 * result + Objects.hashCode(arme);
-        return result;
+    public String toString() {
+        return joueur.getNom() + " soupçonne : " + personnage
+                + " dans " + lieu + " avec " + arme;
     }
+
 }

@@ -1,6 +1,7 @@
 package cluedo.plateau;
 
 import cluedo.histoire.ELieu;
+import metiers.Joueur;
 
 import java.util.ArrayList;
 
@@ -20,6 +21,9 @@ public class CaseCluedo {
     private int ligne, colonne;
     private ELieu piece = null;
     private ArrayList<CaseCluedo> listeVoisins = new ArrayList<CaseCluedo>();
+
+    private Joueur occupant = null;
+
 
     public CaseCluedo(int ligne, int colonne) {
         this.ligne = ligne;
@@ -58,6 +62,19 @@ public class CaseCluedo {
 
     public ArrayList<CaseCluedo> getVoisinnage() {
         return listeVoisins;
+    }
+
+    public void occuper(Joueur joueur) {
+        this.occupant = joueur;
+    }
+    public void liberer() {
+        this.occupant = null;
+    }
+    public boolean estLibre() {
+        return occupant == null;
+    }
+    public Joueur getOccupant() {
+        return occupant;
     }
 
     @Override

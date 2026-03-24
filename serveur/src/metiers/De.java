@@ -1,4 +1,4 @@
-package cluedo.histoire;
+package metiers;
 
 /**
  * Représente un dé à 6 faces utilisé dans le jeu Cluedo.
@@ -9,37 +9,31 @@ package cluedo.histoire;
  */
 public class De {
 
-    /** Nombre de faces du dé. */
-    public static final int NB_FACES = 6;
 
-    /** Dernière valeur obtenue (entre 1 et NB_FACES). */
+    public static final int FACES = 6;
     private int valeur;
 
     /**
-     * Construit un dé avec une valeur initiale de 1.
+     * Constructeur par default
      */
     public De() {
         this.valeur = 1;
     }
 
-    /**
-     * Lance le dé : génère aléatoirement une valeur entre 1 et {@link #NB_FACES}.
-     *
-     * @return la valeur obtenue
-     */
-    public int lancer() {
-        valeur = (int) (Math.random() * NB_FACES) + 1;
+    public int getValeur() {
         return valeur;
     }
 
     /**
-     * Retourne la dernière valeur obtenue lors du dernier lancer.
+     * génère aléatoirement une valeur entre 1 et 6}.
      *
-     * @return la valeur courante du dé (entre 1 et NB_FACES)
+     * @return la valeur obtenue
      */
-    public int getValeur() {
+    public int lancer() {
+        valeur = (int) (Math.random() * FACES) + 1;
         return valeur;
     }
+
 
     @Override
     public String toString() {
