@@ -109,7 +109,7 @@ public class Joueur {
 
     public Soupcon supconne(ELieu lieu, EPersonnage suspect, EArme arme) {
         // Le joueur fait un soupçon avec ces trois éléments
-        return new Soupcon(lieu, suspect, arme);
+        return new Soupcon(this,suspect, lieu, arme);
     }
 
     public int lancerLesDes() throws ActionIllegaleException {
@@ -139,6 +139,34 @@ public class Joueur {
         }
         return null;
     }
+
+    /**
+     * Retourne la liste de toutes les cartes que ce joueur peut montrer
+     * en réponse au soupçon donné.
+     *
+     * Dans le vrai Cluedo, le joueur choisit quelle carte montrer parmi
+     * celles qu'il possède. C'est le client (IHM/réseau) qui appellera
+     * ensuite {@code soupcon.enregistrerReponse(carteChoisie, this)}.
+     *
+     * @param soupcon le soupçon auquel répondre
+     * @return liste des cartes montrables (vide si le joueur ne peut pas répondre)
+     */
+    public List<Carte> cartesMontrables(Soupcon soupcon) {
+        List<Carte> result = new ArrayList<>();
+        for (Carte c : cartes) {
+            if (c.getType() == Carte.TypeCarte.PERSONNAGE
+                    && c.getNom().equals(soupcon.getPersonnage().name()))
+                result.add(c);
+            if (c.getType() == Carte.TypeCarte.ARME
+                    && c.getNom().equals(soupcon.getArme().name()))
+                result.add(c);
+            if (c.getType() == Carte.TypeCarte.LIEU
+                    && c.getNom().equals(soupcon.getLieu().name()))
+                result.add(c);
+        }
+        return result;
+    }
+
 
     public void marquerSoupcon() throws ActionIllegaleException {
         if (ilASoupconner)

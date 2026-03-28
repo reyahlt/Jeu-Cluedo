@@ -38,7 +38,23 @@ public class Carte {
         return nom;
     }
 
+    public EPersonnage getPersonnage() {
+        if (type != TypeCarte.PERSONNAGE)
+            throw new IllegalStateException("Cette carte n'est pas un personnage");
+        return EPersonnage.valueOf(nom);
+    }
 
+    public ELieu getLieu() {
+        if (type != TypeCarte.LIEU)
+            throw new IllegalStateException("Cette carte n'est pas un lieu");
+        return ELieu.valueOf(nom);
+    }
+
+    public EArme getArme() {
+        if (type != TypeCarte.ARME)
+            throw new IllegalStateException("Cette carte n'est pas une arme");
+        return EArme.valueOf(nom);
+    }
 
     @Override
     public boolean equals(Object o) {

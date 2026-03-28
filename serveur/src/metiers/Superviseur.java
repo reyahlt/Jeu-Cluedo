@@ -1,6 +1,6 @@
 package metiers;
 
-import cluedo.exceptions.*;
+
 import cluedo.histoire.*;
 import cluedo.plateau.CaseCluedo;
 import cluedo.plateau.PlateauCluedo;
@@ -24,25 +24,21 @@ import java.util.List;
 public class Superviseur {
 
     /** Positions de départ des joueurs (ligne, colonne), dans l'ordre d'inscription. */
-    public static final int[][] CASES_START = {
+    public static final int[][] CASES_DEPART = {
         {0, 16}, {5, 0}, {7, 23}, {18, 0}, {24, 9}, {24, 14}
     };
 
     public static final int MIN_JOUEURS = 3;
     public static final int MAX_JOUEURS = 6;
 
-    private final List<Joueur> joueurs;
+    private final ArrayList<Joueur> joueurs;
     private final Partie partie;
     private final PlateauCluedo plateau;
 
     private int indexJoueurCourant;
     private boolean partieDemarree;
 
-    /**
-     * Construit un superviseur avec le plateau fourni par le prof.
-     *
-     * @param plateau le plateau de jeu (construit depuis le CSV)
-     */
+
     public Superviseur(PlateauCluedo plateau) {
         if (plateau == null) throw new IllegalArgumentException("Le plateau ne peut pas être nul.");
         this.joueurs = new ArrayList<>();
@@ -98,13 +94,13 @@ public class Superviseur {
                     "Il faut au moins " + MIN_JOUEURS + " joueurs (actuellement : " + joueurs.size() + ").");
 
         // Tirer l'énigme et récupérer les 18 cartes distribuables
-        List<Carte> distribuables = partie.tirerEnigmeEtMelangerCartes();
+        ArrayList<Carte> distribuables = partie.tirerEnigmeEtMelangerCartes();
         distribuerCartes(distribuables);
 
         // Placer les joueurs sur leurs cases de départ
         for (int i = 0; i < joueurs.size(); i++) {
             try {
-                CaseCluedo caseDepart = plateau.getCase(CASES_START[i][0], CASES_START[i][1]);
+                CaseCluedo caseDepart = plateau.getCase(CASES_DEPART[i][0], CASES_DEPART[i][1]);
                 joueurs.get(i).setCaseCourante(caseDepart);
             } catch (PlateauCluedoException e) {
                 throw new IllegalStateException("Case de départ invalide pour le joueur " + i + " : " + e.getMessage());
@@ -206,7 +202,7 @@ public class Superviseur {
      * @throws ActionIllegaleException    si l'action est illégale
      */
     public Soupcon soupconner(Joueur joueur, EPersonnage personnage, ELieu lieu, EArme arme)
-            throws PartieNonDemarreeException, ActionIllegaleException {
+            throws PartieNonDemarreeException, ActionIllegaleException, ReponseDejaDonneeException {
         verifierPartieDemarree();
         verifierJoueurCourant(joueur);
 
