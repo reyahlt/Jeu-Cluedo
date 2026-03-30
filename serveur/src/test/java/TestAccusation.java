@@ -4,6 +4,7 @@ import cluedo.histoire.ELieu;
 import cluedo.histoire.EPersonnage;
 import cluedo.histoire.Enigme;
 import cluedo.plateau.PlateauCluedo;
+import cluedo.plateau.PlateauCluedoException;
 import metiers.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,7 +24,7 @@ class TestAccusation {
 
     @BeforeEach
     void setUp() throws Exception {
-        PlateauCluedo plateau=testInitialisationPlateau();
+        PlateauCluedo plateau = new PlateauCluedo();
         superviseur = new Superviseur(plateau);
         superviseur.ajouterJoueur("Alice",   EPersonnage.Mademoiselle_Rose);
         superviseur.ajouterJoueur("Bob",     EPersonnage.Colonel_Moutarde);
@@ -128,8 +129,8 @@ class TestAccusation {
     }
 
     @Test
-    void accuser_partie_non_demarree_devrait_LeverException() {
-        PlateauCluedo p = PlateauTestHelper.construirePlateauTest();
+    void accuser_partie_non_demarree_devrait_LeverException() throws PlateauCluedoException {
+        PlateauCluedo p =new PlateauCluedo();
         Superviseur sup = new Superviseur(p);
         assertThrows(PartieNonDemarreeException.class, () ->
                 sup.accuser(alice,

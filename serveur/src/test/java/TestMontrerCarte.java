@@ -23,7 +23,7 @@ class TestMontrerCarte {
 
     @BeforeEach
     void setUp() throws Exception {
-        PlateauCluedo plateau = PlateauTestHelper.construirePlateauTest();
+        PlateauCluedo plateau =new PlateauCluedo();
         superviseur = new Superviseur(plateau);
         superviseur.ajouterJoueur("Alice",   EPersonnage.Mademoiselle_Rose);
         superviseur.ajouterJoueur("Bob",     EPersonnage.Colonel_Moutarde);

@@ -1,6 +1,7 @@
 
 import cluedo.histoire.EPersonnage;
 import cluedo.plateau.PlateauCluedo;
+import cluedo.plateau.PlateauCluedoException;
 import metiers.Joueur;
 import metiers.JoueurDejaExistantException;
 import metiers.PartieDejaDemarreeException;
@@ -18,8 +19,8 @@ class TestAjoutJoueur {
     private Superviseur superviseur;
 
     @BeforeEach
-    void setUp() {
-        PlateauCluedo plateau = PlateauTestHelper.construirePlateauTest();
+    void setUp() throws PlateauCluedoException {
+        PlateauCluedo plateau = new PlateauCluedo();
         superviseur = new Superviseur(plateau);
     }
 

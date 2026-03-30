@@ -6,6 +6,7 @@ import cluedo.histoire.Soupcon;
 import cluedo.plateau.CaseCluedo;
 import cluedo.plateau.PlateauCluedo;
 
+import cluedo.plateau.PlateauCluedoException;
 import metiers.*;
 
 import cluedo.histoire.Enigme;
@@ -26,7 +27,7 @@ class TestSoupcon {
 
     @BeforeEach
     void setUp() throws Exception {
-        plateau = PlateauTestHelper.construirePlateauTest();
+         plateau = new PlateauCluedo();
         superviseur = new Superviseur(plateau);
         superviseur.ajouterJoueur("Alice",   EPersonnage.Mademoiselle_Rose);
         superviseur.ajouterJoueur("Bob",     EPersonnage.Colonel_Moutarde);
@@ -37,7 +38,7 @@ class TestSoupcon {
     }
 
     private void placerDansPiece(Joueur joueur, int ligne, int colonne) throws Exception {
-        CaseCluedo[][] grille = PlateauTestHelper.getGrille(plateau);
+        CaseCluedo[][] grille = plateau.getGrille();
         joueur.getCaseCourante().liberer();
         joueur.setCaseCourante(grille[ligne][colonne]);
         // Simuler dés lancés
@@ -185,8 +186,8 @@ class TestSoupcon {
     }
 
     @Test
-    void soupconner_partie_non_demarree_devrait_LeverException() {
-        PlateauCluedo p = PlateauTestHelper.construirePlateauTest();
+    void soupconner_partie_non_demarree_devrait_LeverException() throws PlateauCluedoException {
+        PlateauCluedo p= new PlateauCluedo();
         Superviseur sup = new Superviseur(p);
         assertThrows(PartieNonDemarreeException.class, () ->
                 sup.soupconner(alice,

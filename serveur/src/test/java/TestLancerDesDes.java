@@ -1,6 +1,7 @@
 
 import cluedo.histoire.EPersonnage;
 import cluedo.plateau.PlateauCluedo;
+import cluedo.plateau.PlateauCluedoException;
 import metiers.ActionIllegaleException;
 import metiers.Joueur;
 import metiers.PartieNonDemarreeException;
@@ -22,7 +23,7 @@ class TestLancerDesDes {
 
     @BeforeEach
     void setUp() throws Exception {
-        PlateauCluedo plateau = PlateauTestHelper.construirePlateauTest();
+        PlateauCluedo plateau = new PlateauCluedo();
         superviseur = new Superviseur(plateau);
         superviseur.ajouterJoueur("Alice", EPersonnage.Mademoiselle_Rose);
         superviseur.ajouterJoueur("Bob",   EPersonnage.Colonel_Moutarde);
@@ -46,7 +47,7 @@ class TestLancerDesDes {
 
     @RepeatedTest(20)
     void lancerDes_resultat_toujours_entre_2_et_12() throws Exception {
-        PlateauCluedo plateau = PlateauTestHelper.construirePlateauTest();
+        PlateauCluedo plateau = new PlateauCluedo();
         Superviseur sup = new Superviseur(plateau);
         sup.ajouterJoueur("Alice",   EPersonnage.Mademoiselle_Rose);
         sup.ajouterJoueur("Bob",     EPersonnage.Colonel_Moutarde);
@@ -99,8 +100,8 @@ class TestLancerDesDes {
     }
 
     @Test
-    void lancerDes_partieNonDemarree_devrait_LeverException() {
-        PlateauCluedo plateau = PlateauTestHelper.construirePlateauTest();
+    void lancerDes_partieNonDemarree_devrait_LeverException() throws PlateauCluedoException {
+        PlateauCluedo plateau = new PlateauCluedo();
         Superviseur sup = new Superviseur(plateau);
         assertThrows(PartieNonDemarreeException.class, () ->
                 sup.lancerLesDes(alice));

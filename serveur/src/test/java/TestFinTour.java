@@ -1,6 +1,7 @@
 
 import cluedo.histoire.EPersonnage;
 import cluedo.plateau.PlateauCluedo;
+import cluedo.plateau.PlateauCluedoException;
 import metiers.ActionIllegaleException;
 import metiers.Joueur;
 import metiers.PartieNonDemarreeException;
@@ -22,7 +23,7 @@ class TestFinTour {
 
     @BeforeEach
     void setUp() throws Exception {
-        PlateauCluedo plateau = PlateauTestHelper.construirePlateauTest();
+        PlateauCluedo plateau = new PlateauCluedo();
         superviseur = new Superviseur(plateau);
         superviseur.ajouterJoueur("Alice",   EPersonnage.Mademoiselle_Rose);
         superviseur.ajouterJoueur("Bob",     EPersonnage.Colonel_Moutarde);
@@ -105,8 +106,8 @@ class TestFinTour {
     }
 
     @Test
-    void finirTour_partie_non_demarree_devrait_LeverException() {
-        PlateauCluedo p = PlateauTestHelper.construirePlateauTest();
+    void finirTour_partie_non_demarree_devrait_LeverException() throws PlateauCluedoException {
+        PlateauCluedo p = new PlateauCluedo();
         Superviseur sup = new Superviseur(p);
         assertThrows(PartieNonDemarreeException.class, () ->
                 sup.finirTour(alice));

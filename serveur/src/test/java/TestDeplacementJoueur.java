@@ -29,7 +29,7 @@ class TestDeplacementJoueur {
 
     @BeforeEach
     void setUp() throws Exception {
-        plateau = PlateauTestHelper.construirePlateauTest();
+        plateau = new PlateauCluedo();
         superviseur = new Superviseur(plateau);
         superviseur.ajouterJoueur("Alice",   EPersonnage.Mademoiselle_Rose);
         superviseur.ajouterJoueur("Bob",     EPersonnage.Colonel_Moutarde);
@@ -45,7 +45,7 @@ class TestDeplacementJoueur {
 
     /** Place Alice en (8,7) avec 1 déplacement, Bob en (9,7). */
     private void placerAlice_8_7_Bob_9_7() throws Exception {
-        CaseCluedo[][] g = PlateauTestHelper.getGrille(plateau);
+        CaseCluedo[][] g = plateau.getGrille();
         alice.getCaseCourante().liberer();
         bob.getCaseCourante().liberer();
         alice.setCaseCourante(g[8][7]);
@@ -56,7 +56,7 @@ class TestDeplacementJoueur {
 
     /** Place Alice sur une case donnée avec N déplacements. */
     private void placerAlice(int ligne, int colonne, int deplacements) throws Exception {
-        CaseCluedo[][] g = PlateauTestHelper.getGrille(plateau);
+        CaseCluedo[][] g = plateau.getGrille();
         alice.getCaseCourante().liberer();
         alice.setCaseCourante(g[ligne][colonne]);
         alice.setDeplacementsRestants(deplacements);
@@ -72,7 +72,7 @@ class TestDeplacementJoueur {
     }
 
     private CaseCluedo case_(int l, int c) throws Exception {
-        return PlateauTestHelper.getGrille(plateau)[l][c];
+        return plateau.getCase(l, c);
     }
 
     // =========================================================================
@@ -238,7 +238,7 @@ class TestDeplacementJoueur {
     void deplacer_sans_lancer_les_des_devrait_LeverException()
             throws Exception {
         // Alice est placée mais les dés ne sont PAS forcés
-        CaseCluedo[][] g = PlateauTestHelper.getGrille(plateau);
+        CaseCluedo[][] g = plateau.getGrille();
         alice.getCaseCourante().liberer();
         alice.setCaseCourante(g[8][7]);
         // Pas de forcerDesLances → aDejeLanceLeDes = false

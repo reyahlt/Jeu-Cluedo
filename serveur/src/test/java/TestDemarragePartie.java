@@ -1,6 +1,7 @@
 
 import cluedo.histoire.EPersonnage;
 import cluedo.plateau.PlateauCluedo;
+import cluedo.plateau.PlateauCluedoException;
 import metiers.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,8 +17,8 @@ class TestDemarragePartie {
     private Superviseur superviseur;
 
     @BeforeEach
-    void setUp() throws PartieDejaDemarreeException, JoueurDejaExistantException {
-        PlateauCluedo plateau = PlateauTestHelper.construirePlateauTest();
+    void setUp() throws PartieDejaDemarreeException, JoueurDejaExistantException, PlateauCluedoException {
+        PlateauCluedo plateau = new PlateauCluedo();
         superviseur = new Superviseur(plateau);
         superviseur.ajouterJoueur("Alice",   EPersonnage.Mademoiselle_Rose);
         superviseur.ajouterJoueur("Bob",     EPersonnage.Colonel_Moutarde);
@@ -125,16 +126,16 @@ class TestDemarragePartie {
     // -------------------------------------------------------------------------
 
     @Test
-    void demarrerPartie_sansJoueurs_devrait_LeverException() {
-        PlateauCluedo plateau = PlateauTestHelper.construirePlateauTest();
+    void demarrerPartie_sansJoueurs_devrait_LeverException() throws PlateauCluedoException {
+        PlateauCluedo plateau = new PlateauCluedo();
         Superviseur sup = new Superviseur(plateau);
         assertThrows(NombreJoueursInsuffisantException.class, sup::demarrerPartie);
     }
 
     @Test
     void demarrerPartie_avecDeuxJoueurs_devrait_LeverException()
-            throws PartieDejaDemarreeException, JoueurDejaExistantException {
-        PlateauCluedo plateau = PlateauTestHelper.construirePlateauTest();
+            throws PartieDejaDemarreeException, JoueurDejaExistantException, PlateauCluedoException {
+        PlateauCluedo plateau = new PlateauCluedo();
         Superviseur sup = new Superviseur(plateau);
         sup.ajouterJoueur("Alice", EPersonnage.Mademoiselle_Rose);
         sup.ajouterJoueur("Bob",   EPersonnage.Colonel_Moutarde);

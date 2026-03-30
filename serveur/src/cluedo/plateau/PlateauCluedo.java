@@ -157,4 +157,8 @@ public class PlateauCluedo {
             throw new PlateauCluedoException("Coordonnées en dehors du plateau...");
         return t[ligne][colonne];
     }
+
+    public CaseCluedo[][] getGrille() {
+        return t;
+    }
 }
