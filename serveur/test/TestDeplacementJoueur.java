@@ -1,11 +1,11 @@
-
 import cluedo.histoire.ELieu;
 import cluedo.histoire.EPersonnage;
 import cluedo.plateau.CaseCluedo;
 import cluedo.plateau.PlateauCluedo;
-import exception.PlateauCluedoException;
+
 import exception.ActionIllegaleException;
 import exception.DeplacementImpossibleException;
+import exception.PlateauCluedoException;
 import metiers.Joueur;
 import metiers.Superviseur;
 import org.junit.jupiter.api.BeforeEach;
@@ -65,7 +65,7 @@ class TestDeplacementJoueur {
 
     private void forcerDesLances(Joueur joueur) {
         try {
-            var f = Joueur.class.getDeclaredField("aDejeLanceLeDes");
+            var f = Joueur.class.getDeclaredField("dejaLanceLeDes");
             f.setAccessible(true);
             f.set(joueur, true);
         } catch (Exception e) { throw new RuntimeException(e); }

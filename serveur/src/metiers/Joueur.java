@@ -22,7 +22,6 @@ public class Joueur {
     private boolean ilASoupconner;  //vrai si il a deja soupconné ce tour
     private De de1;
     private  De de2;
-    private CaseCluedo caseCourante;
 
     public  Joueur(String nom, EPersonnage p) {
         if (nom == null || nom.trim().isEmpty())
@@ -39,7 +38,6 @@ public class Joueur {
         this.elimine = false;
         this.de1 = new De();
         this.de2 = new De();
-
     }
 
     public void setNom(String alice) {
@@ -73,30 +71,21 @@ public class Joueur {
     }
 
     public boolean possedeCartes(Carte carte) {
-        return cartes.contains(carte); }
+        return cartes.contains(carte);
+    }
 
-    /**
-     * Vide toutes les cartes du joueur (utilisé avant redistribution)
-     */
     public void viderCartes() { cartes.clear(); }
 
-    /**
-     * Réinitialise l'état du joueur pour un nouveau tour.
-     */
     public void reinitialiserTour() {
         this.dejaLanceLeDes = false;
         this.ilASoupconner = false;
         this.deplacementsRestants = 0;
     }
-    public void setDeplacementsRestants(int nb) {
-        this.deplacementsRestants = nb; }
 
-    /**
-     * Place le joueur sur une case du plat
-     * Libère l'ancienne case et occupe la nouvelle
-     *
-     * @param nvlCase la case sur laquelle placer le joueur
-     */
+    public void setDeplacementsRestants(int nb) {
+        this.deplacementsRestants = nb;
+    }
+
     public void setCaseCourante(CaseCluedo nvlCase) {
         if (caseActuel != null)
             caseActuel.liberer();
@@ -107,28 +96,25 @@ public class Joueur {
 
     public void eliminer() { this.elimine = true; }
 
-
-
     public Soupcon supconne(ELieu lieu, EPersonnage suspect, EArme arme) {
-        // Le joueur fait un soupçon avec ces trois éléments
-        return new Soupcon(this,suspect, lieu, arme);
+        return new Soupcon(this, suspect, lieu, arme);
     }
-
 
     public int lancerLesDes() throws ActionIllegaleException {
         if (dejaLanceLeDes)
             throw new ActionIllegaleException(nom + " a déjà lancé les dés");
-        int s= de1.lancer() + de2.lancer();
-       setDeplacementsRestants(s);
+        int s = de1.lancer() + de2.lancer();
+        setDeplacementsRestants(s);
         this.dejaLanceLeDes = true;
         return s;
     }
+
     public De getDe1() { return de1; }
     public De getDe2() { return de2; }
 
     public Carte montrerCarte(Soupcon soupcon) {
         for (Carte c : cartes) {
-            switch(c.getType()) {
+            switch (c.getType()) {
                 case PERSONNAGE:
                     if (c.getNom().equals(soupcon.getPersonnage().name())) return c;
                     break;
@@ -143,17 +129,6 @@ public class Joueur {
         return null;
     }
 
-    /**
-     * Retourne la liste de toutes les cartes que ce joueur peut montrer
-     * en réponse au soupçon donné.
-     *
-     * Dans le vrai Cluedo, le joueur choisit quelle carte montrer parmi
-     * celles qu'il possède. C'est le client (IHM/réseau) qui appellera
-     * ensuite {@code soupcon.enregistrerReponse(carteChoisie, this)}.
-     *
-     * @param soupcon le soupçon auquel répondre
-     * @return liste des cartes montrables (vide si le joueur ne peut pas répondre)
-     */
     public List<Carte> cartesMontrables(Soupcon soupcon) {
         List<Carte> result = new ArrayList<>();
         for (Carte c : cartes) {
@@ -170,40 +145,47 @@ public class Joueur {
         return result;
     }
 
-
     public void marquerSoupcon() throws ActionIllegaleException {
         if (ilASoupconner)
             throw new ActionIllegaleException(nom + " a déjà soupçonné ce tour.");
         this.ilASoupconner = true;
     }
 
-
     public void deplacerVers(CaseCluedo caseCible)
             throws ActionIllegaleException, DeplacementImpossibleException {
         if (caseActuel == null)
             throw new ActionIllegaleException(
                     nom + " n'a pas encore été placé sur le plateau (setCaseCourante non appelé).");
-
         if (!dejaLanceLeDes)
             throw new ActionIllegaleException(nom + " doit lancer les dés avant de se déplacer.");
         if (deplacementsRestants <= 0)
             throw new DeplacementImpossibleException(nom + " n'a plus de déplacements disponibles.");
-        if (!caseActuel.estVoisin(caseCible))
+
+        // Déplacement autorisé si case voisine OU déplacement intra-pièce (même pièce)
+        boolean memePiece = caseActuel.getPiece() != null
+                && caseActuel.getPiece() == caseCible.getPiece();
+        if (!caseActuel.estVoisin(caseCible) && !memePiece)
             throw new DeplacementImpossibleException(
                     "La case (" + caseCible.getLigne() + "," + caseCible.getColonne()
                             + ") n'est pas dans le voisinage de " + nom + ".");
+
         if (!caseCible.estLibre())
             throw new DeplacementImpossibleException(
                     "La case (" + caseCible.getLigne() + "," + caseCible.getColonne()
                             + ") est déjà occupée.");
 
-
+        ELieu pieceAvant = caseActuel.getPiece();
         caseActuel.liberer();
         this.caseActuel = caseCible;
         caseCible.occuper(this);
-        this.deplacementsRestants--;
-    }
 
+        // Passage secret (pièce → pièce différente) : consomme tous les déplacements restants
+        if (pieceAvant != null && caseCible.getPiece() != null && caseCible.getPiece() != pieceAvant) {
+            this.deplacementsRestants = 0;
+        } else {
+            this.deplacementsRestants--;
+        }
+    }
 
     @Override
     public String toString() {
@@ -221,20 +203,12 @@ public class Joueur {
     public int hashCode() { return nom.hashCode(); }
 
     public int getLigne() {
-
-        if (caseCourante != null) {
-            return caseCourante.getLigne();
-        }
+        if (caseActuel != null) return caseActuel.getLigne();
         return -1;
     }
 
     public int getColonne() {
-        if (caseCourante != null) {
-            return caseCourante.getColonne();
-        }
+        if (caseActuel != null) return caseActuel.getColonne();
         return -1;
     }
-
-
 }
-

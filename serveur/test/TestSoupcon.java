@@ -41,14 +41,9 @@ class TestSoupcon {
 
     private void placerDansPiece(Joueur joueur, int ligne, int colonne) throws Exception {
         CaseCluedo[][] grille = plateau.getGrille();
-        joueur.getCaseCourante().liberer();
+        if (joueur.getCaseCourante() != null)
+            joueur.getCaseCourante().liberer();
         joueur.setCaseCourante(grille[ligne][colonne]);
-        // Simuler dés lancés
-        try {
-            var f = Joueur.class.getDeclaredField("aDejeLanceLeDes");
-            f.setAccessible(true);
-            f.set(joueur, true);
-        } catch (Exception e) { throw new RuntimeException(e); }
     }
 
     // -------------------------------------------------------------------------
@@ -125,25 +120,26 @@ class TestSoupcon {
         placerDansPiece(alice, 8, 0);
         superviseur.lancerLesDes(alice);
 
-        // Trouver une carte que personne d'autre ne possède
-        // (elle est soit dans l'énigme, soit chez Alice)
         Enigme enigme = superviseur.getPartie().getEnigme();
+
+        // Correct : Carte.getPersonnage() retourne directement EPersonnage
         EPersonnage p = enigme.getPersonnage().getPersonnage();
         ELieu l = ELieu.Bibliotheque;
         EArme a = enigme.getArme().getArme();
 
-        // S'assurer que Alice ne possède pas ces cartes non plus
-        boolean alicePossedeP = alice.getCartes().stream()
-                .anyMatch(c -> c.getType() == Carte.TypeCarte.PERSONNAGE
-                        && c.getNom().equals(p.name()));
-        boolean alicePossedeA = alice.getCartes().stream()
-                .anyMatch(c -> c.getType() == Carte.TypeCarte.ARME
-                        && c.getNom().equals(a.name()));
+        // Vérifier qu'AUCUN joueur ne possède ces cartes
+        boolean quelquunPossedeP = superviseur.getJoueurs().stream()
+                .anyMatch(j -> j.getCartes().stream()
+                        .anyMatch(c -> c.getType() == Carte.TypeCarte.PERSONNAGE
+                                && c.getNom().equals(p.name())));
+        boolean quelquunPossedeA = superviseur.getJoueurs().stream()
+                .anyMatch(j -> j.getCartes().stream()
+                        .anyMatch(c -> c.getType() == Carte.TypeCarte.ARME
+                                && c.getNom().equals(a.name())));
 
-        if (alicePossedeP || alicePossedeA) return; // skip si Alice les a
+        if (quelquunPossedeP || quelquunPossedeA) return;
 
         Soupcon s = superviseur.soupconner(alice, p, l, a);
-        // L'énigme contient p et a → personne d'autre ne les a
         assertFalse(s.aEteRefute());
     }
 
