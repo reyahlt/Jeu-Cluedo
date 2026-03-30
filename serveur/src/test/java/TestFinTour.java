@@ -1,8 +1,10 @@
-import cluedo.exceptions.*;
+
 import cluedo.histoire.EPersonnage;
-import cluedo.joueur.Joueur;
-import cluedo.joueur.Superviseur;
 import cluedo.plateau.PlateauCluedo;
+import metiers.ActionIllegaleException;
+import metiers.Joueur;
+import metiers.PartieNonDemarreeException;
+import metiers.Superviseur;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -46,7 +48,7 @@ class TestFinTour {
     void finirTour_reinitialise_aDejeLanceLeDes() throws Exception {
         superviseur.lancerLesDes(alice);
         superviseur.finirTour(alice);
-        assertFalse(alice.isADejeLanceLeDes());
+        assertFalse(alice.DejaLanceLeDes());
     }
 
     @Test
@@ -60,7 +62,7 @@ class TestFinTour {
     void finirTour_reinitialise_aDejeSoupçonne() throws Exception {
         superviseur.lancerLesDes(alice);
         superviseur.finirTour(alice);
-        assertFalse(alice.isADejeSoupçonne());
+        assertFalse(alice.IlASoupçonner());
     }
 
     @Test

@@ -1,8 +1,10 @@
+
 import cluedo.histoire.*;
-import cluedo.joueur.Joueur;
-import cluedo.joueur.Superviseur;
+import cluedo.histoire.Enigme;
 import cluedo.plateau.PlateauCluedo;
-import cluedo.exceptions.*;
+import metiers.Carte;
+import metiers.Joueur;
+import metiers.Superviseur;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -96,7 +98,7 @@ class TestMontrerCarte {
     @Test
     void possedeCarte_devrait_RetournerTrue_si_joueur_la_possede() {
         Carte carteDeBob = bob.getCartes().get(0);
-        assertTrue(bob.possedeCarte(carteDeBob));
+        assertTrue(bob.possedeCartes(carteDeBob));
     }
 
     @Test
@@ -106,7 +108,7 @@ class TestMontrerCarte {
         boolean bobLaPossede = bob.getCartes().stream()
                 .anyMatch(c -> c.equals(carteEnigme));
         if (!bobLaPossede) {
-            assertFalse(bob.possedeCarte(carteEnigme));
+            assertFalse(bob.possedeCartes(carteEnigme));
         }
     }
 

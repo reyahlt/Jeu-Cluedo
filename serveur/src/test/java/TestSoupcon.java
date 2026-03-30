@@ -1,9 +1,14 @@
-import cluedo.exceptions.*;
-import cluedo.histoire.*;
-import cluedo.joueur.Joueur;
-import cluedo.joueur.Superviseur;
+
+import cluedo.histoire.EArme;
+import cluedo.histoire.ELieu;
+import cluedo.histoire.EPersonnage;
+import cluedo.histoire.Soupcon;
 import cluedo.plateau.CaseCluedo;
 import cluedo.plateau.PlateauCluedo;
+
+import metiers.*;
+
+import cluedo.histoire.Enigme;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -31,7 +36,7 @@ class TestSoupcon {
         bob   = superviseur.getJoueurParNom("Bob");
     }
 
-    private void placerDansPiece(Joueur joueur, int ligne, int colonne) {
+    private void placerDansPiece(Joueur joueur, int ligne, int colonne) throws Exception {
         CaseCluedo[][] grille = PlateauTestHelper.getGrille(plateau);
         joueur.getCaseCourante().liberer();
         joueur.setCaseCourante(grille[ligne][colonne]);
@@ -66,7 +71,7 @@ class TestSoupcon {
         superviseur.lancerLesDes(alice);
         superviseur.soupconner(alice,
                 EPersonnage.Colonel_Moutarde, ELieu.Bibliotheque, EArme.Chandelier);
-        assertTrue(alice.isADejeSoupçonne());
+        assertTrue(alice.IlASoupçonner());
     }
 
     @Test

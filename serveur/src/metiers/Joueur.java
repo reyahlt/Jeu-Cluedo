@@ -20,7 +20,7 @@ public class Joueur {
     private boolean ilASoupconner;  //vrai si il a deja soupconné ce tour
     private De de1;
     private  De de2;
-
+    private CaseCluedo caseCourante;
 
     public  Joueur(String nom, EPersonnage p) {
         if (nom == null || nom.trim().isEmpty())
@@ -111,6 +111,7 @@ public class Joueur {
         // Le joueur fait un soupçon avec ces trois éléments
         return new Soupcon(this,suspect, lieu, arme);
     }
+
 
     public int lancerLesDes() throws ActionIllegaleException {
         if (dejaLanceLeDes)
@@ -216,5 +217,22 @@ public class Joueur {
 
     @Override
     public int hashCode() { return nom.hashCode(); }
+
+    public int getLigne() {
+
+        if (caseCourante != null) {
+            return caseCourante.getLigne();
+        }
+        return -1;
+    }
+
+    public int getColonne() {
+        if (caseCourante != null) {
+            return caseCourante.getColonne();
+        }
+        return -1;
+    }
+
+
 }
 

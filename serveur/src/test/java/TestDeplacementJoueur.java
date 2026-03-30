@@ -1,11 +1,13 @@
-import cluedo.exceptions.*;
+
 import cluedo.histoire.ELieu;
 import cluedo.histoire.EPersonnage;
-import cluedo.joueur.Joueur;
-import cluedo.joueur.Superviseur;
 import cluedo.plateau.CaseCluedo;
 import cluedo.plateau.PlateauCluedo;
 import cluedo.plateau.PlateauCluedoException;
+import metiers.ActionIllegaleException;
+import metiers.DeplacementImpossibleException;
+import metiers.Joueur;
+import metiers.Superviseur;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -42,7 +44,7 @@ class TestDeplacementJoueur {
     // =========================================================================
 
     /** Place Alice en (8,7) avec 1 déplacement, Bob en (9,7). */
-    private void placerAlice_8_7_Bob_9_7() {
+    private void placerAlice_8_7_Bob_9_7() throws Exception {
         CaseCluedo[][] g = PlateauTestHelper.getGrille(plateau);
         alice.getCaseCourante().liberer();
         bob.getCaseCourante().liberer();
@@ -53,7 +55,7 @@ class TestDeplacementJoueur {
     }
 
     /** Place Alice sur une case donnée avec N déplacements. */
-    private void placerAlice(int ligne, int colonne, int deplacements) {
+    private void placerAlice(int ligne, int colonne, int deplacements) throws Exception {
         CaseCluedo[][] g = PlateauTestHelper.getGrille(plateau);
         alice.getCaseCourante().liberer();
         alice.setCaseCourante(g[ligne][colonne]);
@@ -69,7 +71,7 @@ class TestDeplacementJoueur {
         } catch (Exception e) { throw new RuntimeException(e); }
     }
 
-    private CaseCluedo case_(int l, int c) {
+    private CaseCluedo case_(int l, int c) throws Exception {
         return PlateauTestHelper.getGrille(plateau)[l][c];
     }
 

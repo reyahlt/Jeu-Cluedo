@@ -1,4 +1,6 @@
 import cluedo.histoire.*;
+import cluedo.histoire.Enigme;
+import metiers.Carte;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

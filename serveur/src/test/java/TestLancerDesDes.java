@@ -1,11 +1,10 @@
-import cluedo.exceptions.ActionIllegaleException;
-import cluedo.exceptions.JoueurDejaExistantException;
-import cluedo.exceptions.PartieDejaDemarreeException;
-import cluedo.exceptions.PartieNonDemarreeException;
+
 import cluedo.histoire.EPersonnage;
-import cluedo.joueur.Joueur;
-import cluedo.joueur.Superviseur;
 import cluedo.plateau.PlateauCluedo;
+import metiers.ActionIllegaleException;
+import metiers.Joueur;
+import metiers.PartieNonDemarreeException;
+import metiers.Superviseur;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
@@ -70,7 +69,7 @@ class TestLancerDesDes {
     void apresLancerDes_aDejeLanceLeDes_devrait_EtreTrue()
             throws PartieNonDemarreeException, ActionIllegaleException {
         superviseur.lancerLesDes(alice);
-        assertTrue(alice.isADejeLanceLeDes());
+        assertTrue(alice.DejaLanceLeDes());
     }
 
     @Test

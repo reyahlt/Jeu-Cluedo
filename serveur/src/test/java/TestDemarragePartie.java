@@ -1,10 +1,7 @@
-import cluedo.exceptions.JoueurDejaExistantException;
-import cluedo.exceptions.NombreJoueursInsuffisantException;
-import cluedo.exceptions.PartieDejaDemarreeException;
+
 import cluedo.histoire.EPersonnage;
-import cluedo.joueur.Joueur;
-import cluedo.joueur.Superviseur;
 import cluedo.plateau.PlateauCluedo;
+import metiers.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

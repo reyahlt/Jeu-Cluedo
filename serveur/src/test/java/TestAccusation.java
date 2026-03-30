@@ -23,7 +23,7 @@ class TestAccusation {
 
     @BeforeEach
     void setUp() throws Exception {
-        PlateauCluedo plateau = PlateauTestHelper.construirePlateauTest();
+        PlateauCluedo plateau=testInitialisationPlateau();
         superviseur = new Superviseur(plateau);
         superviseur.ajouterJoueur("Alice",   EPersonnage.Mademoiselle_Rose);
         superviseur.ajouterJoueur("Bob",     EPersonnage.Colonel_Moutarde);

@@ -1,5 +1,10 @@
 
+import cluedo.histoire.EPersonnage;
 import cluedo.plateau.PlateauCluedo;
+import metiers.Joueur;
+import metiers.JoueurDejaExistantException;
+import metiers.PartieDejaDemarreeException;
+import metiers.Superviseur;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
