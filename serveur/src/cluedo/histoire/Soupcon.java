@@ -2,9 +2,7 @@ package cluedo.histoire;
 
 import metiers.Carte;
 import metiers.Joueur;
-import metiers.ReponseDejaDonneeException;
-
-import java.util.Objects;
+import exception.ReponseDejaDonneeException;
 
 public class Soupcon  {
     private final Joueur joueur; //doivent pas changer apres creation

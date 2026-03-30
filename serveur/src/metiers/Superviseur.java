@@ -4,7 +4,8 @@ package metiers;
 import cluedo.histoire.*;
 import cluedo.plateau.CaseCluedo;
 import cluedo.plateau.PlateauCluedo;
-import cluedo.plateau.PlateauCluedoException;
+import exception.PlateauCluedoException;
+import exception.*;
 
 import java.util.ArrayList;
 import java.util.Collections;

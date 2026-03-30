@@ -5,6 +5,8 @@ import cluedo.histoire.ELieu;
 import cluedo.histoire.EPersonnage;
 import cluedo.histoire.Soupcon;
 import cluedo.plateau.CaseCluedo;
+import exception.ActionIllegaleException;
+import exception.DeplacementImpossibleException;
 
 import java.util.ArrayList;
 import java.util.List;
