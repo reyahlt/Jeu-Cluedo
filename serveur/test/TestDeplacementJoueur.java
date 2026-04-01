@@ -1,9 +1,11 @@
+import cluedo.histoire.EArme;
 import cluedo.histoire.ELieu;
 import cluedo.histoire.EPersonnage;
 import cluedo.plateau.CaseCluedo;
 import cluedo.plateau.PlateauCluedo;
 
 import exception.ActionIllegaleException;
+import exception.DeplacementApresSoupconException;
 import exception.DeplacementImpossibleException;
 import exception.PlateauCluedoException;
 import metiers.Joueur;
@@ -269,5 +271,13 @@ class TestDeplacementJoueur {
         assertThrows(ActionIllegaleException.class, () ->
                 nouveau.deplacerVers(case_(7, 7)));
     }
-
+    @Test
+    void apres_soupcon_alice_ne_peut_plus_se_deplacer() throws Exception {
+        placerAlice( 8, 0,3); // Bibliothèque
+        superviseur.soupconner(alice,
+                EPersonnage.Colonel_Moutarde, ELieu.Bibliotheque, EArme.Chandelier);
+        alice.setDeplacementsRestants(3); // on lui redonne des déplacements
+        assertThrows(DeplacementApresSoupconException.class, () ->
+                superviseur.deplacerJoueur(alice, 8, 1));
+    }
 }
