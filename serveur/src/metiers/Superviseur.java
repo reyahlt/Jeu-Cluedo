@@ -258,7 +258,9 @@ public class Superviseur {
             partie.terminer(joueur);
         } else {
             joueur.eliminer();
-            boolean tousElimines = joueurs.stream().allMatch(Joueur::isElimine);
+            boolean tousElimines = true;
+            for (Joueur j : joueurs)
+                if (!j.isElimine()) { tousElimines = false; break; }
             if (tousElimines) partie.terminer(null);
         }
         return accusation;
