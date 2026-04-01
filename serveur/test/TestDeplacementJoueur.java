@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * Tests unitaires pour les déplacements d'un joueur.
  *
- * Chaque vérification est un scénario indépendant comme indiqué dans le sujet.
+ * Chaque vérification est un scénario indépendant .
  * Pour les scénarios autour de (8,7), on suppose toujours qu'Alice se trouve en (8,7)
  * avec 1 déplacement possible et Bob en (9,7).
  */
