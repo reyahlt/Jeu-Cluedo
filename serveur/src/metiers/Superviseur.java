@@ -211,24 +211,20 @@ public class Superviseur {
         if (pieceCourante == null || pieceCourante != lieu)
             throw new ActionIllegaleException(
                     joueur.getNom() + " doit être dans la pièce " + lieu + " pour soupçonner (actuellement : "
-                    + (pieceCourante == null ? "couloir" : pieceCourante) + ").");
+                            + (pieceCourante == null ? "couloir" : pieceCourante) + ").");
 
         joueur.marquerSoupcon();
         Soupcon soupcon = new Soupcon(joueur, personnage, lieu, arme);
 
         // Interroger les autres joueurs dans l'ordre
-        int indexAuteur = joueurs.indexOf(joueur);
-        int i = (indexAuteur + 1) % joueurs.size();
-        while (i != indexAuteur) {
-            Joueur repondant = joueurs.get(i);
-            if (!repondant.isElimine()) {
-                Carte reponse = repondant.montrerCarte(soupcon);
-                if (reponse != null) {
-                    soupcon.enregistrerReponse(reponse, repondant);
-                    break;
-                }
+        Joueur repondant = getJoueurSuivant(joueur);
+        while (!repondant.equals(joueur)) {
+            Carte reponse = repondant.montrerCarte(soupcon);
+            if (reponse != null) {
+                soupcon.enregistrerReponse(reponse, repondant);
+                break;
             }
-            i = (i + 1) % joueurs.size();
+            repondant = getJoueurSuivant(repondant);
         }
 
         partie.enregistrerSoupcon(soupcon);
