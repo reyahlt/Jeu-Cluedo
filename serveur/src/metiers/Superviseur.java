@@ -182,10 +182,12 @@ public class Superviseur {
      * @throws PlateauCluedoException         si les coordonnées sont hors plateau
      */
     public void deplacerJoueur(Joueur joueur, int ligne, int colonne)
-            throws PartieNonDemarreeException, ActionIllegaleException,
+            throws PartieNonDemarreeException, ActionIllegaleException,DeplacementApresSoupconException,
                    DeplacementImpossibleException, PlateauCluedoException {
         verifierPartieDemarree();
         verifierJoueurCourant(joueur);
+        if (joueur.IlASoupçonner())
+            throw new DeplacementApresSoupconException("le Joueur a déjà soupçonné, il ne peut plus se déplacer.\"");
         CaseCluedo caseCible = plateau.getCase(ligne, colonne);
         joueur.deplacerVers(caseCible);
     }

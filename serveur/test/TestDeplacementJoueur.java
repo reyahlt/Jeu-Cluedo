@@ -269,4 +269,5 @@ class TestDeplacementJoueur {
         assertThrows(ActionIllegaleException.class, () ->
                 nouveau.deplacerVers(case_(7, 7)));
     }
+
 }
