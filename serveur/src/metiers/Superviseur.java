@@ -215,25 +215,49 @@ public class Superviseur {
      * @throws ActionIllegaleException    si l'action est illégale
      */
     public Soupcon soupconner(Joueur joueur, EPersonnage personnage, ELieu lieu, EArme arme)
-            throws PartieNonDemarreeException, ActionIllegaleException, ReponseDejaDonneeException {
+            throws PartieNonDemarreeException, ActionIllegaleException,
+            ReponseDejaDonneeException {
         verifierPartieDemarree();
         verifierJoueurCourant(joueur);
 
-        ELieu pieceCourante = joueur.getCaseCourante().getPiece();
-        if (pieceCourante == null || pieceCourante != lieu)
+        // Le joueur est éliminé
+        if (joueur.isElimine())
             throw new ActionIllegaleException(
-                    joueur.getNom() + " doit être dans la pièce " + lieu + " pour soupçonner (actuellement : "
-                            + (pieceCourante == null ? "couloir" : pieceCourante) + ").");
+                    joueur.getNom() + " est éliminé et ne peut pas soupçonner.");
+
+        // Le joueur a déjà soupçonné ce tour
+        if (joueur.IlASoupçonner())
+            throw new ActionIllegaleException(
+                    joueur.getNom() + " a déjà soupçonné ce tour.");
+
+        // Le joueur n'est pas dans une pièce
+        ELieu pieceCourante = joueur.getCaseCourante().getPiece();
+        if (pieceCourante == null)
+            throw new ActionIllegaleException(
+                    joueur.getNom() + " doit être dans une pièce pour soupçonner.");
+
+        // Le joueur n'est pas dans la bonne pièce
+        if (pieceCourante != lieu)
+            throw new ActionIllegaleException(
+                    joueur.getNom() + " doit être dans la pièce " + lieu
+                            + " pour soupçonner (actuellement : " + pieceCourante + ").");
+
+        // Les paramètres du soupçon sont nuls
+        if (personnage == null || arme == null || lieu == null)
+            throw new ActionIllegaleException(
+                    "Le soupçon doit contenir un personnage, un lieu et une arme valides.");
 
         joueur.marquerSoupcon();
         Soupcon soupcon = new Soupcon(joueur, personnage, lieu, arme);
 
-
         Joueur repondant = getJoueurSuivant(joueur);
         if (!repondant.equals(joueur)) {
-            Carte reponse = repondant.montrerCarte(soupcon);
-            if (reponse != null) {
-                soupcon.enregistrerReponse(reponse, repondant);
+            try {
+                Carte reponse = montrerCarte(repondant, soupcon, null);
+                if (reponse != null) {
+                    soupcon.enregistrerReponse(reponse, repondant);
+                }
+            } catch (CarteInvalideException e) {
 
             }
             repondant = getJoueurSuivant(repondant);

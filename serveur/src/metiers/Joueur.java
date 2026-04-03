@@ -5,10 +5,7 @@ import cluedo.histoire.ELieu;
 import cluedo.histoire.EPersonnage;
 import cluedo.histoire.Soupcon;
 import cluedo.plateau.CaseCluedo;
-import exception.ActionIllegaleException;
-import exception.CarteInvalideException;
-import exception.DeplacementImpossibleException;
-import exception.PartieNonDemarreeException;
+import exception.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -98,10 +95,11 @@ public class Joueur {
 
     public void eliminer() { this.elimine = true; }
 
-    public Soupcon supconne(ELieu lieu, EPersonnage suspect, EArme arme) {
-        return new Soupcon(this, suspect, lieu, arme);
+    public Soupcon supconne(ELieu lieu, EPersonnage suspect, EArme arme)
+            throws PartieNonDemarreeException, ActionIllegaleException,
+            ReponseDejaDonneeException, ActionIllegaleException {
+        return Superviseur.getInstance().soupconner(this, suspect, lieu, arme);
     }
-
     public int lancerLesDes() throws ActionIllegaleException {
         if (dejaLanceLeDes)
             throw new ActionIllegaleException(nom + " a déjà lancé les dés");

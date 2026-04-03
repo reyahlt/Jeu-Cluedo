@@ -1,7 +1,7 @@
 package metiers;
 
 import cluedo.histoire.*;
-import cluedo.histoire.Enigme;
+
 
 
 import java.util.ArrayList;

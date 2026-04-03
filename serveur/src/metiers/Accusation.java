@@ -3,7 +3,7 @@ package metiers;
 import cluedo.histoire.EArme;
 import cluedo.histoire.ELieu;
 import cluedo.histoire.EPersonnage;
-import cluedo.histoire.Enigme;
+
 
 
 /**
