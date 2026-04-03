@@ -50,11 +50,15 @@ public class Superviseur {
 
     public Superviseur(PlateauCluedo plateau) {
         if (plateau == null) throw new IllegalArgumentException("Le plateau ne peut pas être nul.");
+        if (instance != null)
+            throw new IllegalStateException("Le Superviseur a déjà été créé !");
+ 
         this.joueurs = new ArrayList<>();
         this.partie = Partie.getInstance();
         this.plateau = plateau;
         this.indexJoueurCourant = 0;
         this.partieDemarree = false;
+        instance = this;
     }
 
     // =========================================================================
@@ -214,7 +218,7 @@ public class Superviseur {
      * @throws PartieNonDemarreeException si la partie n'est pas démarrée
      * @throws ActionIllegaleException    si l'action est illégale
      */
-    public Soupcon soupconner(Joueur joueur, EPersonnage personnage, ELieu lieu, EArme arme)
+    public Soupcon soupconne(Joueur joueur, EPersonnage personnage, ELieu lieu, EArme arme)
             throws PartieNonDemarreeException, ActionIllegaleException,
             ReponseDejaDonneeException {
         verifierPartieDemarree();
@@ -260,7 +264,7 @@ public class Superviseur {
             } catch (CarteInvalideException e) {
 
             }
-            repondant = getJoueurSuivant(repondant);
+        //    repondant = getJoueurSuivant(repondant);
         }
 
         partie.enregistrerSoupcon(soupcon);

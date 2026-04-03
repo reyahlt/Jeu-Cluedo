@@ -98,7 +98,7 @@ public class Joueur {
     public Soupcon supconne(ELieu lieu, EPersonnage suspect, EArme arme)
             throws PartieNonDemarreeException, ActionIllegaleException,
             ReponseDejaDonneeException, ActionIllegaleException {
-        return Superviseur.getInstance().soupconner(this, suspect, lieu, arme);
+        return Superviseur.getInstance().soupconne(this, suspect, lieu, arme);
     }
     public int lancerLesDes() throws ActionIllegaleException {
         if (dejaLanceLeDes)

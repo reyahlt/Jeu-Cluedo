@@ -29,7 +29,7 @@ public class Soupcon  {
         this.lieu = lieu;
         this.arme = arme;
     }
-    public Joueur getAuteur()          { return joueur; }
+
     public EPersonnage getPersonnage() { return personnage; }
     public ELieu getLieu()             { return lieu; }
     public EArme getArme()             { return arme; }
