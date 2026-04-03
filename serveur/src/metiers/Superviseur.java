@@ -24,9 +24,11 @@ import java.util.List;
  */
 public class Superviseur {
 
-    /** Positions de départ des joueurs (ligne, colonne), dans l'ordre d'inscription. */
+    /**
+     * Positions de départ des joueurs (ligne, colonne), dans l'ordre d'inscription.
+     */
     public static final int[][] CASES_DEPART = {
-        {0, 16}, {5, 0}, {7, 23}, {18, 0}, {24, 9}, {24, 14}
+            {0, 16}, {5, 0}, {7, 23}, {18, 0}, {24, 9}, {24, 14}
     };
 
     public static final int MIN_JOUEURS = 3;
@@ -38,12 +40,18 @@ public class Superviseur {
 
     private int indexJoueurCourant;
     private boolean partieDemarree;
+    private static Superviseur instance;
 
+    public static Superviseur getInstance() {
+        if (instance == null)
+            throw new IllegalStateException("Superviseur non initialisé.");
+        return instance;
+    }
 
     public Superviseur(PlateauCluedo plateau) {
         if (plateau == null) throw new IllegalArgumentException("Le plateau ne peut pas être nul.");
         this.joueurs = new ArrayList<>();
-        this.partie = new Partie();
+        this.partie = Partie.getInstance();
         this.plateau = plateau;
         this.indexJoueurCourant = 0;
         this.partieDemarree = false;
@@ -112,7 +120,9 @@ public class Superviseur {
         this.partieDemarree = true;
     }
 
-    /** Distribue équitablement les cartes entre les joueurs. */
+    /**
+     * Distribue équitablement les cartes entre les joueurs.
+     */
     private void distribuerCartes(List<Carte> cartes) {
         int n = joueurs.size();
         for (int i = 0; i < cartes.size(); i++)
@@ -182,8 +192,8 @@ public class Superviseur {
      * @throws PlateauCluedoException         si les coordonnées sont hors plateau
      */
     public void deplacerJoueur(Joueur joueur, int ligne, int colonne)
-            throws PartieNonDemarreeException, ActionIllegaleException,DeplacementApresSoupconException,
-                   DeplacementImpossibleException, PlateauCluedoException {
+            throws PartieNonDemarreeException, ActionIllegaleException, DeplacementApresSoupconException,
+            DeplacementImpossibleException, PlateauCluedoException {
         verifierPartieDemarree();
         verifierJoueurCourant(joueur);
         if (joueur.IlASoupçonner())
@@ -218,13 +228,13 @@ public class Superviseur {
         joueur.marquerSoupcon();
         Soupcon soupcon = new Soupcon(joueur, personnage, lieu, arme);
 
-        // Interroger les autres joueurs dans l'ordre
+
         Joueur repondant = getJoueurSuivant(joueur);
-        while (!repondant.equals(joueur)) {
+        if (!repondant.equals(joueur)) {
             Carte reponse = repondant.montrerCarte(soupcon);
             if (reponse != null) {
                 soupcon.enregistrerReponse(reponse, repondant);
-                break;
+
             }
             repondant = getJoueurSuivant(repondant);
         }
@@ -260,7 +270,10 @@ public class Superviseur {
             joueur.eliminer();
             boolean tousElimines = true;
             for (Joueur j : joueurs)
-                if (!j.isElimine()) { tousElimines = false; break; }
+                if (!j.isElimine()) {
+                    tousElimines = false;
+                    break;
+                }
             if (tousElimines) partie.terminer(null);
         }
         return accusation;
@@ -288,17 +301,33 @@ public class Superviseur {
     // Accesseurs
     // =========================================================================
 
-    /** @return liste non modifiable des joueurs */
-    public List<Joueur> getJoueurs() { return Collections.unmodifiableList(joueurs); }
+    /**
+     * @return liste non modifiable des joueurs
+     */
+    public List<Joueur> getJoueurs() {
+        return Collections.unmodifiableList(joueurs);
+    }
 
-    /** @return la partie en cours */
-    public Partie getPartie() { return partie; }
+    /**
+     * @return la partie en cours
+     */
+    public Partie getPartie() {
+        return partie;
+    }
 
-    /** @return le plateau de jeu */
-    public PlateauCluedo getPlateau() { return plateau; }
+    /**
+     * @return le plateau de jeu
+     */
+    public PlateauCluedo getPlateau() {
+        return plateau;
+    }
 
-    /** @return true si la partie est démarrée */
-    public boolean isPartieDemarree() { return partieDemarree; }
+    /**
+     * @return true si la partie est démarrée
+     */
+    public boolean isPartieDemarree() {
+        return partieDemarree;
+    }
 
     /**
      * Recherche un joueur par son nom (insensible à la casse).
@@ -324,5 +353,43 @@ public class Superviseur {
     private void verifierJoueurCourant(Joueur joueur) throws ActionIllegaleException {
         if (!joueurs.get(indexJoueurCourant).equals(joueur))
             throw new ActionIllegaleException("Ce n'est pas le tour de " + joueur.getNom() + ".");
+    }
+
+    public Carte montrerCarte(Joueur repondant, Soupcon soupcon, Carte carteChoisie)
+            throws PartieNonDemarreeException, ActionIllegaleException, CarteInvalideException {
+        verifierPartieDemarree();
+
+        // Le joueur répondant ne peut pas être le joueur qui a soupçonné
+        if (repondant.equals(soupcon.getJoueur()))
+            throw new ActionIllegaleException(
+                    repondant.getNom() + " ne peut pas répondre à son propre soupçon.");
+
+        // Le joueur est éliminé
+        if (repondant.isElimine())
+            throw new ActionIllegaleException(
+                    repondant.getNom() + " est éliminé et ne peut pas répondre.");
+
+        List<Carte> cartesMontrables = repondant.cartesMontrables(soupcon);
+
+        // Le joueur n'a aucune carte à montrer
+        if (cartesMontrables.isEmpty())
+            return null;
+
+        // Le joueur a des cartes mais n'en a pas choisi (choix humain attendu)
+        if (carteChoisie == null)
+            throw new CarteInvalideException(
+                    repondant.getNom() + " doit choisir une carte parmi : " + cartesMontrables);
+
+        // La carte choisie n'appartient pas au joueur
+        if (!repondant.getCartes().contains(carteChoisie))
+            throw new CarteInvalideException(
+                    repondant.getNom() + " ne possède pas la carte " + carteChoisie.getNom() + ".");
+
+        // La carte choisie ne correspond pas au soupçon
+        if (!cartesMontrables.contains(carteChoisie))
+            throw new CarteInvalideException(
+                    "La carte " + carteChoisie.getNom() + " ne correspond pas au soupçon.");
+
+        return carteChoisie;
     }
 }

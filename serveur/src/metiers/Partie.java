@@ -15,28 +15,21 @@ import java.util.List;
  * et conserve l'historique des soupçons et accusations.
  */
 public class Partie {
-
-    /** (21 cartes : 6 personnages + 9 lieux + 6 armes). */
     private final List<Carte> toutesLesCartes;
-
-    /** L'énigme secrète (initialisée au démarrage). */
     private Enigme enigme;
-
-    /** Historique des soupçons formulés pendant la partie. */
     private final ArrayList<Soupcon> historiqueSoupcons;
-
-    /** Historique des accusations formulées pendant la partie. */
     private final ArrayList<Accusation> historiqueAccusations;
-
-    /** La partie est-elle terminée ? */
     private boolean terminee;
-
-    /** Le gagnant (null si pas encore terminée ou si tout le monde est éliminé). */
     private Joueur gagnant;
 
-    /**
-     * Construit une nouvelle partie et initialise le deck de 21 cartes.
-     */
+    private static Partie instance;
+    public static Partie getInstance() {
+        if (instance == null) {
+            instance = new Partie();
+        }
+        return instance;
+    }
+
     public Partie() {
         this.toutesLesCartes = new ArrayList<>();
         this.historiqueSoupcons = new ArrayList<>();

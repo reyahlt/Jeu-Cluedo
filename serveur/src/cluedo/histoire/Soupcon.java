@@ -68,4 +68,7 @@ public class Soupcon  {
                 + " dans " + lieu + " avec " + arme;
     }
 
+    public Joueur getJoueur() {
+        return joueur;
+    }
 }

@@ -6,7 +6,9 @@ import cluedo.histoire.EPersonnage;
 import cluedo.histoire.Soupcon;
 import cluedo.plateau.CaseCluedo;
 import exception.ActionIllegaleException;
+import exception.CarteInvalideException;
 import exception.DeplacementImpossibleException;
+import exception.PartieNonDemarreeException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -112,25 +114,13 @@ public class Joueur {
     public De getDe1() { return de1; }
     public De getDe2() { return de2; }
 
-    public Carte montrerCarte(Soupcon soupcon) {
-        for (Carte c : cartes) {
-            switch (c.getType()) {
-                case PERSONNAGE:
-                    if (c.getNom().equals(soupcon.getPersonnage().name())) return c;
-                    break;
-                case ARME:
-                    if (c.getNom().equals(soupcon.getArme().name())) return c;
-                    break;
-                case LIEU:
-                    if (c.getNom().equals(soupcon.getLieu().name())) return c;
-                    break;
-            }
-        }
-        return null;
+    public Carte montrerCarte(Soupcon soupcon, Carte carteChoisie)
+            throws PartieNonDemarreeException, ActionIllegaleException, CarteInvalideException {
+        return Superviseur.getInstance().montrerCarte(this, soupcon, carteChoisie);
     }
 
-    public List<Carte> cartesMontrables(Soupcon soupcon) {
-        List<Carte> result = new ArrayList<>();
+    public ArrayList<Carte> cartesMontrables(Soupcon soupcon) {
+        ArrayList<Carte> result = new ArrayList<>();
         for (Carte c : cartes) {
             if (c.getType() == Carte.TypeCarte.PERSONNAGE
                     && c.getNom().equals(soupcon.getPersonnage().name()))
