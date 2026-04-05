@@ -21,7 +21,7 @@ public class Partie {
     private final ArrayList<Accusation> historiqueAccusations;
     private boolean terminee;
     private Joueur gagnant;
-
+    private final java.util.Map<EArme, ELieu> positionsArmes = new java.util.HashMap<>();
     private static Partie instance;
     public static Partie getInstance() {
         if (instance == null) {
@@ -105,5 +105,19 @@ public class Partie {
     public void terminer(Joueur gagnant) {
         this.terminee = true;
         this.gagnant = gagnant;
+    }
+    /**
+     * Réinitialise l'instance unique de Partie.
+     * À n'utiliser que dans les tests pour repartir à zéro.
+     */
+    public static void reset() {
+        instance = null;
+    }
+
+    void deplacerArmeDansLaPiece(EArme arme, ELieu lieu) {
+        positionsArmes.put(arme, lieu);
+    }
+    public ELieu getPositionArme(EArme arme) {
+        return positionsArmes.get(arme);
     }
 }

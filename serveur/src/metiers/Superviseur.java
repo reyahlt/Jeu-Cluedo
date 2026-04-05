@@ -42,6 +42,13 @@ public class Superviseur {
     private boolean partieDemarree;
     private static Superviseur instance;
 
+    /** État métier pour gérer un soupçon en plusieurs étapes. */
+    private boolean modeSoupcon;
+    private Soupcon soupconEnCours;
+
+    private int indexJoueurSoupcon;
+    private int indexJoueurDevantRefuter;
+
     public static Superviseur getInstance() {
         if (instance == null)
             throw new IllegalStateException("Superviseur non initialisé.");
@@ -52,12 +59,15 @@ public class Superviseur {
         if (plateau == null) throw new IllegalArgumentException("Le plateau ne peut pas être nul.");
         if (instance != null)
             throw new IllegalStateException("Le Superviseur a déjà été créé !");
- 
+
+        Partie.reset();
         this.joueurs = new ArrayList<>();
         this.partie = Partie.getInstance();
         this.plateau = plateau;
         this.indexJoueurCourant = 0;
         this.partieDemarree = false;
+        this.modeSoupcon = false;
+        this.soupconEnCours = null;
         instance = this;
     }
 
@@ -205,7 +215,17 @@ public class Superviseur {
         CaseCluedo caseCible = plateau.getCase(ligne, colonne);
         joueur.deplacerVers(caseCible);
     }
+    private void passerAuRefuteurSuivant() throws PartieNonDemarreeException {
+        Joueur actuel = joueurs.get(indexJoueurDevantRefuter);
+        Joueur suivant = getJoueurSuivant(actuel);
 
+        if (suivant == joueurs.get(indexJoueurSoupcon)) {
+            terminerModeSoupcon();
+            return;
+        }
+
+        indexJoueurDevantRefuter = joueurs.indexOf(suivant);
+    }
     /**
      * Formule un soupçon pour le joueur courant.
      * Le joueur doit se trouver dans la pièce correspondant au lieu soupçonné.
@@ -218,16 +238,21 @@ public class Superviseur {
      * @throws PartieNonDemarreeException si la partie n'est pas démarrée
      * @throws ActionIllegaleException    si l'action est illégale
      */
-    public Soupcon soupconne(Joueur joueur, EPersonnage personnage, ELieu lieu, EArme arme)
+    public void soupconne(Joueur joueur, EPersonnage personnage, ELieu lieu, EArme arme)
             throws PartieNonDemarreeException, ActionIllegaleException,
-            ReponseDejaDonneeException {
+            ReponseDejaDonneeException, PlateauCluedoException {
         verifierPartieDemarree();
         verifierJoueurCourant(joueur);
+
+        if (joueur != getJoueurCourant()) {
+            throw new ActionIllegaleException("Ce n'est pas le tour de " + joueur.getNom() + " !");
+        }
 
         // Le joueur est éliminé
         if (joueur.isElimine())
             throw new ActionIllegaleException(
                     joueur.getNom() + " est éliminé et ne peut pas soupçonner.");
+
 
         // Le joueur a déjà soupçonné ce tour
         if (joueur.IlASoupçonner())
@@ -245,30 +270,32 @@ public class Superviseur {
             throw new ActionIllegaleException(
                     joueur.getNom() + " doit être dans la pièce " + lieu
                             + " pour soupçonner (actuellement : " + pieceCourante + ").");
-
+        if (modeSoupcon) {
+            throw new ActionIllegaleException("Un soupçon est déjà en cours, impossible d'en émettre un autre.");
+        }
         // Les paramètres du soupçon sont nuls
         if (personnage == null || arme == null || lieu == null)
             throw new ActionIllegaleException(
                     "Le soupçon doit contenir un personnage, un lieu et une arme valides.");
 
         joueur.marquerSoupcon();
+
+        deplacerSuspectDansLaPiece(personnage, lieu);
+        partie.deplacerArmeDansLaPiece(arme, lieu);
+
         Soupcon soupcon = new Soupcon(joueur, personnage, lieu, arme);
+        this.soupconEnCours = soupcon;
+        this.modeSoupcon = true;
+        this.indexJoueurSoupcon = joueurs.indexOf(joueur);
+        Joueur suivant = getJoueurSuivant(joueur);
 
-        Joueur repondant = getJoueurSuivant(joueur);
-        if (!repondant.equals(joueur)) {
-            try {
-                Carte reponse = montrerCarte(repondant, soupcon, null);
-                if (reponse != null) {
-                    soupcon.enregistrerReponse(reponse, repondant);
-                }
-            } catch (CarteInvalideException e) {
 
-            }
-        //    repondant = getJoueurSuivant(repondant);
-        }
+
+        this.indexJoueurDevantRefuter = joueurs.indexOf(suivant);
+    
 
         partie.enregistrerSoupcon(soupcon);
-        return soupcon;
+
     }
 
     /**
@@ -383,32 +410,44 @@ public class Superviseur {
             throw new ActionIllegaleException("Ce n'est pas le tour de " + joueur.getNom() + ".");
     }
 
-    public Carte montrerCarte(Joueur repondant, Soupcon soupcon, Carte carteChoisie)
+    public Carte montrerCarte(Joueur repondant, Carte carteChoisie)
             throws PartieNonDemarreeException, ActionIllegaleException, CarteInvalideException {
         verifierPartieDemarree();
 
+        if (!modeSoupcon || soupconEnCours == null) {
+            throw new ActionIllegaleException("Aucun soupçon n'est en cours, on ne peut pas montrer de carte.");
+        }
+
         // Le joueur répondant ne peut pas être le joueur qui a soupçonné
-        if (repondant.equals(soupcon.getJoueur()))
+        if (repondant.equals(soupconEnCours.getJoueur())) {
             throw new ActionIllegaleException(
                     repondant.getNom() + " ne peut pas répondre à son propre soupçon.");
+        }
+
+        if (repondant != joueurs.get(indexJoueurDevantRefuter)) {
+            throw new ActionIllegaleException(
+                    "Ce n'est pas à " + repondant.getNom() + " de réfuter le soupçon !");
+        }
 
         // Le joueur est éliminé
-        if (repondant.isElimine())
+        if (repondant.isElimine()) {
             throw new ActionIllegaleException(
                     repondant.getNom() + " est éliminé et ne peut pas répondre.");
+        }
+        ArrayList<Carte> cartesMontrables = repondant.cartesMontrables(soupconEnCours);
 
-        List<Carte> cartesMontrables = repondant.cartesMontrables(soupcon);
 
         // Le joueur n'a aucune carte à montrer
-        if (cartesMontrables.isEmpty())
-            return null;
+        if (cartesMontrables.isEmpty()){
+            passerAuRefuteurSuivant();
+            return null;}
 
-        // Le joueur a des cartes mais n'en a pas choisi (choix humain attendu)
+        // Le joueur a des cartes mais n'en a pas choisi
         if (carteChoisie == null)
             throw new CarteInvalideException(
                     repondant.getNom() + " doit choisir une carte parmi : " + cartesMontrables);
 
-        // La carte choisie n'appartient pas au joueur
+
         if (!repondant.getCartes().contains(carteChoisie))
             throw new CarteInvalideException(
                     repondant.getNom() + " ne possède pas la carte " + carteChoisie.getNom() + ".");
@@ -417,7 +456,39 @@ public class Superviseur {
         if (!cartesMontrables.contains(carteChoisie))
             throw new CarteInvalideException(
                     "La carte " + carteChoisie.getNom() + " ne correspond pas au soupçon.");
-
+        terminerModeSoupcon(); //sortir du mode soupcon car on a refuté
         return carteChoisie;
     }
+
+    private void terminerModeSoupcon() {
+        this.modeSoupcon = false;
+        this.soupconEnCours = null;
+        this.indexJoueurSoupcon = -1;
+        this.indexJoueurDevantRefuter = -1;
+    }
+    public static void reset() {
+        instance = null;
+    }
+    private CaseCluedo trouverUneCaseDeLaPiece(ELieu lieu) throws PlateauCluedoException {
+        for (int ligne = 0; ligne < 25; ligne++) {
+            for (int colonne = 0; colonne < 24; colonne++) {
+                CaseCluedo c = plateau.getCase(ligne, colonne);
+                if (c.getPiece() == lieu) {
+                    return c;
+                }
+            }
+        }
+        throw new IllegalArgumentException("Aucune case trouvée pour la pièce " + lieu + ".");
+    }
+    private void deplacerSuspectDansLaPiece(EPersonnage personnage, ELieu lieu)
+            throws PlateauCluedoException {
+        for (Joueur j : joueurs) {
+            if (j.getPersonnage() == personnage) {
+                j.setCaseCourante(trouverUneCaseDeLaPiece(lieu));
+                return;
+            }
+        }
+    }
+
+
 }

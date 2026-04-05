@@ -22,6 +22,7 @@ public class Joueur {
     private De de1;
     private  De de2;
 
+
     public  Joueur(String nom, EPersonnage p) {
         if (nom == null || nom.trim().isEmpty())
             throw new IllegalArgumentException("Le nom du joueur ne peut pas être vide.");
@@ -95,10 +96,9 @@ public class Joueur {
 
     public void eliminer() { this.elimine = true; }
 
-    public Soupcon supconne(ELieu lieu, EPersonnage suspect, EArme arme)
-            throws PartieNonDemarreeException, ActionIllegaleException,
-            ReponseDejaDonneeException, ActionIllegaleException {
-        return Superviseur.getInstance().soupconne(this, suspect, lieu, arme);
+    public void soupconne(ELieu lieu, EPersonnage suspect, EArme arme)
+            throws PartieNonDemarreeException, ActionIllegaleException, PlateauCluedoException, ReponseDejaDonneeException {
+        Superviseur.getInstance().soupconne(this, suspect, lieu, arme);
     }
     public int lancerLesDes() throws ActionIllegaleException {
         if (dejaLanceLeDes)
@@ -112,9 +112,9 @@ public class Joueur {
     public De getDe1() { return de1; }
     public De getDe2() { return de2; }
 
-    public Carte montrerCarte(Soupcon soupcon, Carte carteChoisie)
+    public Carte montrerCarte(Carte carteChoisie)
             throws PartieNonDemarreeException, ActionIllegaleException, CarteInvalideException {
-        return Superviseur.getInstance().montrerCarte(this, soupcon, carteChoisie);
+        return Superviseur.getInstance().montrerCarte(this, carteChoisie);
     }
 
     public ArrayList<Carte> cartesMontrables(Soupcon soupcon) {
@@ -199,4 +199,7 @@ public class Joueur {
         if (caseActuel != null) return caseActuel.getColonne();
         return -1;
     }
+
+
+
 }
