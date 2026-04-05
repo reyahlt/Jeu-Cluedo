@@ -17,4 +17,22 @@ public class CartePersonnage implements Carte {
     public String getNom() {
         return personnage.name();
     }
+
+    @Override
+    public String toString() {
+        return personnage.name();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof CartePersonnage)) return false;
+        CartePersonnage other = (CartePersonnage) o;
+        return this.personnage == other.personnage;
+    }
+
+    @Override
+    public int hashCode() {
+        return personnage.hashCode();
+    }
 }

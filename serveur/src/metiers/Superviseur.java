@@ -425,7 +425,7 @@ public class Superviseur {
     }
 
     public Carte montrerCarte(Joueur repondant, Carte carteChoisie)
-            throws PartieNonDemarreeException, ActionIllegaleException, CarteInvalideException {
+            throws PartieNonDemarreeException, ActionIllegaleException, CarteInvalideException, ReponseDejaDonneeException {
         verifierPartieDemarree();
 
         if (!modeSoupcon || soupconEnCours == null) {
@@ -471,6 +471,7 @@ public class Superviseur {
             throw new CarteInvalideException(
                     "La carte " + carteChoisie.getNom() + " ne correspond pas au soupçon.");
         terminerModeSoupcon(); //sortir du mode soupcon car on a refuté
+        soupconEnCours.enregistrerReponse(carteChoisie, repondant);
         return carteChoisie;
     }
 

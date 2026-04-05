@@ -17,4 +17,22 @@ public class CarteArme implements Carte {
     public String getNom() {
         return arme.name();
     }
+
+    @Override
+    public String toString() {
+        return arme.name();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof CarteArme)) return false;
+        CarteArme other = (CarteArme) o;
+        return this.arme == other.arme;
+    }
+
+    @Override
+    public int hashCode() {
+        return arme.hashCode();
+    }
 }
