@@ -190,6 +190,10 @@ public class Superviseur {
     public int lancerLesDes(Joueur joueur)
             throws PartieNonDemarreeException, ActionIllegaleException {
         verifierPartieDemarree();
+
+        if (modeSoupcon) {
+            throw new ActionIllegaleException("Impossible de lancer les dés : un soupçon est en cours.");
+        }
         verifierJoueurCourant(joueur);
         return joueur.lancerLesDes();
     }
@@ -209,6 +213,9 @@ public class Superviseur {
             throws PartieNonDemarreeException, ActionIllegaleException, DeplacementApresSoupconException,
             DeplacementImpossibleException, PlateauCluedoException {
         verifierPartieDemarree();
+        if (modeSoupcon) {
+            throw new ActionIllegaleException("Impossible de se déplacer : un soupçon est en cours.");
+        }
         verifierJoueurCourant(joueur);
         if (joueur.IlASoupçonner())
             throw new DeplacementApresSoupconException("le Joueur a déjà soupçonné, il ne peut plus se déplacer.\"");
@@ -314,6 +321,9 @@ public class Superviseur {
     public Accusation accuser(Joueur joueur, EPersonnage personnage, ELieu lieu, EArme arme)
             throws PartieNonDemarreeException, ActionIllegaleException {
         verifierPartieDemarree();
+        if (modeSoupcon) {
+            throw new ActionIllegaleException("Impossible d'accuser : un soupçon est en cours.");
+        }
         verifierJoueurCourant(joueur);
 
         Accusation accusation = new Accusation(joueur, personnage, lieu, arme, partie.getEnigme());
@@ -344,6 +354,9 @@ public class Superviseur {
     public void finirTour(Joueur joueur)
             throws PartieNonDemarreeException, ActionIllegaleException {
         verifierPartieDemarree();
+        if (modeSoupcon) {
+            throw new ActionIllegaleException("Impossible de finir le tour : un soupçon est en cours.");
+        }
         verifierJoueurCourant(joueur);
         joueur.reinitialiserTour();
         int next = (indexJoueurCourant + 1) % joueurs.size();
@@ -469,22 +482,22 @@ public class Superviseur {
     public static void reset() {
         instance = null;
     }
-    private CaseCluedo trouverUneCaseDeLaPiece(ELieu lieu) throws PlateauCluedoException {
+    private CaseCluedo trouverUneCaseLibreDeLaPiece(ELieu lieu) throws PlateauCluedoException {
         for (int ligne = 0; ligne < 25; ligne++) {
             for (int colonne = 0; colonne < 24; colonne++) {
                 CaseCluedo c = plateau.getCase(ligne, colonne);
-                if (c.getPiece() == lieu) {
+                if (c.getPiece() == lieu && c.estLibre()) {
                     return c;
                 }
             }
         }
-        throw new IllegalArgumentException("Aucune case trouvée pour la pièce " + lieu + ".");
+        throw new IllegalStateException("Aucune case libre trouvée dans la pièce " + lieu);
     }
     private void deplacerSuspectDansLaPiece(EPersonnage personnage, ELieu lieu)
             throws PlateauCluedoException {
         for (Joueur j : joueurs) {
             if (j.getPersonnage() == personnage) {
-                j.setCaseCourante(trouverUneCaseDeLaPiece(lieu));
+                j.setCaseCourante(trouverUneCaseLibreDeLaPiece(lieu));
                 return;
             }
         }
