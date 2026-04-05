@@ -217,7 +217,7 @@ public class Superviseur {
             throw new ActionIllegaleException("Impossible de se déplacer : un soupçon est en cours.");
         }
         verifierJoueurCourant(joueur);
-        if (joueur.IlASoupçonner())
+        if (joueur.aSoupconne())
             throw new DeplacementApresSoupconException("le Joueur a déjà soupçonné, il ne peut plus se déplacer.\"");
         CaseCluedo caseCible = plateau.getCase(ligne, colonne);
         joueur.deplacerVers(caseCible);
@@ -251,9 +251,9 @@ public class Superviseur {
         verifierPartieDemarree();
         verifierJoueurCourant(joueur);
 
-        if (joueur != getJoueurCourant()) {
+       /** if (joueur != getJoueurCourant()) {
             throw new ActionIllegaleException("Ce n'est pas le tour de " + joueur.getNom() + " !");
-        }
+        }**/
 
         // Le joueur est éliminé
         if (joueur.isElimine())
@@ -262,7 +262,7 @@ public class Superviseur {
 
 
         // Le joueur a déjà soupçonné ce tour
-        if (joueur.IlASoupçonner())
+        if (joueur.aSoupconne())
             throw new ActionIllegaleException(
                     joueur.getNom() + " a déjà soupçonné ce tour.");
 
@@ -297,10 +297,11 @@ public class Superviseur {
         Joueur suivant = getJoueurSuivant(joueur);
 
 
-
-        this.indexJoueurDevantRefuter = joueurs.indexOf(suivant);
-    
-
+        if (suivant == joueur) {//aucun autre joueur libre pour refuter
+            terminerModeSoupcon();
+        } else {
+            this.indexJoueurDevantRefuter = joueurs.indexOf(suivant);
+        }
         partie.enregistrerSoupcon(soupcon);
 
     }

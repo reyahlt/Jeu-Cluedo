@@ -69,7 +69,7 @@ class TestSoupcon {
         superviseur.lancerLesDes(alice);
         superviseur.soupconner(alice,
                 EPersonnage.Colonel_Moutarde, ELieu.Bibliotheque, EArme.Chandelier);
-        assertTrue(alice.IlASoupçonner());
+        assertTrue(alice.aSoupçonne());
     }
 
     @Test

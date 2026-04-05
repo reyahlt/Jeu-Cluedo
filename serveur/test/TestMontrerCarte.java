@@ -2,7 +2,6 @@
 import cluedo.histoire.*;
 import cluedo.histoire.Enigme;
 import cluedo.plateau.PlateauCluedo;
-import metiers.Carte;
 import metiers.Joueur;
 import metiers.Superviseur;
 import org.junit.jupiter.api.BeforeEach;

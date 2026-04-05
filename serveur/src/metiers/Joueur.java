@@ -18,7 +18,7 @@ public class Joueur {
     private int deplacementsRestants;
     private boolean elimine; //vrai si le joueur est eliminé
     private boolean dejaLanceLeDes; //si il a deja lancer le de ou non
-    private boolean ilASoupconner;  //vrai si il a deja soupconné ce tour
+    private boolean aSoupconner;  //vrai si il a deja soupconné ce tour
     private De de1;
     private  De de2;
 
@@ -34,7 +34,7 @@ public class Joueur {
         this.cartes = new ArrayList<>();
         this.deplacementsRestants = 0;
         this.dejaLanceLeDes = false;
-        this.ilASoupconner = false;
+        this.aSoupconner = false;
         this.elimine = false;
         this.de1 = new De();
         this.de2 = new De();
@@ -61,7 +61,7 @@ public class Joueur {
     public CaseCluedo getCaseCourante() { return caseActuel; }
     public int getDeplacementsRestants() { return deplacementsRestants; }
     public boolean DejaLanceLeDes() { return dejaLanceLeDes; }
-    public boolean IlASoupçonner() { return ilASoupconner; }
+    public boolean aSoupconne() { return aSoupconner; }
     public boolean isElimine() { return elimine; }
 
 
@@ -78,7 +78,7 @@ public class Joueur {
 
     public void reinitialiserTour() {
         this.dejaLanceLeDes = false;
-        this.ilASoupconner = false;
+        this.aSoupconner = false;
         this.deplacementsRestants = 0;
     }
 
@@ -119,24 +119,35 @@ public class Joueur {
 
     public ArrayList<Carte> cartesMontrables(Soupcon soupcon) {
         ArrayList<Carte> result = new ArrayList<>();
+
         for (Carte c : cartes) {
-            if (c.getType() == Carte.TypeCarte.PERSONNAGE
-                    && c.getNom().equals(soupcon.getPersonnage().name()))
-                result.add(c);
-            if (c.getType() == Carte.TypeCarte.ARME
-                    && c.getNom().equals(soupcon.getArme().name()))
-                result.add(c);
-            if (c.getType() == Carte.TypeCarte.LIEU
-                    && c.getNom().equals(soupcon.getLieu().name()))
-                result.add(c);
+
+            if (c instanceof CartePersonnage cp) {
+                if (cp.getPersonnage() == soupcon.getPersonnage()) {
+                    result.add(c);
+                }
+            }
+
+            if (c instanceof CarteArme ca) {
+                if (ca.getArme() == soupcon.getArme()) {
+                    result.add(c);
+                }
+            }
+
+            if (c instanceof CarteLieu cl) {
+                if (cl.getLieu() == soupcon.getLieu()) {
+                    result.add(c);
+                }
+            }
         }
+
         return result;
     }
 
     public void marquerSoupcon() throws ActionIllegaleException {
-        if (ilASoupconner)
+        if (aSoupconner)
             throw new ActionIllegaleException(nom + " a déjà soupçonné ce tour.");
-        this.ilASoupconner = true;
+        this.aSoupconner = true;
     }
 
     public void deplacerVers(CaseCluedo caseCible)

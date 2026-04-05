@@ -41,12 +41,15 @@ public class Partie {
 
     /** Initialise les 21 cartes via la classe Carte unique. */
     private void initialiserCartesPartie() {
-        for (EPersonnage p : EPersonnage.values())
-            toutesLesCartes.add(new Carte(p));
-        for (ELieu l : ELieu.values())
-            toutesLesCartes.add(new Carte(l));
-        for (EArme a : EArme.values())
-            toutesLesCartes.add(new Carte(a));
+        for (EPersonnage p : EPersonnage.values()) {
+            toutesLesCartes.add(new CartePersonnage(p));
+        }
+        for (ELieu l : ELieu.values()) {
+            toutesLesCartes.add(new CarteLieu(l));
+        }
+        for (EArme a : EArme.values()) {
+            toutesLesCartes.add(new CarteArme(a));
+        }
     }
 
     /**
@@ -59,12 +62,22 @@ public class Partie {
         ArrayList<Carte> cartesPartie = new ArrayList<>(toutesLesCartes);
         Collections.shuffle(cartesPartie);
 
-        Carte cPersonnage = null, cLieu = null, cArme = null;
+        CartePersonnage cPersonnage = null;
+        CarteLieu cLieu = null;
+        CarteArme cArme = null;
+
         for (Carte c : cartesPartie) {
-            if (cPersonnage == null && c.getType() == Carte.TypeCarte.PERSONNAGE) cPersonnage = c;
-            else if (cLieu == null && c.getType() == Carte.TypeCarte.LIEU)  cLieu = c;
-            else if (cArme == null && c.getType() == Carte.TypeCarte.ARME)  cArme = c;
-            if (cPersonnage != null && cLieu != null && cArme != null) break;
+            if (cPersonnage == null && c instanceof CartePersonnage cp) {
+                cPersonnage = cp;
+            } else if (cLieu == null && c instanceof CarteLieu cl) {
+                cLieu = cl;
+            } else if (cArme == null && c instanceof CarteArme ca) {
+                cArme = ca;
+            }
+
+            if (cPersonnage != null && cLieu != null && cArme != null) {
+                break;
+            }
         }
 
         this.enigme = new Enigme(cPersonnage, cLieu, cArme);

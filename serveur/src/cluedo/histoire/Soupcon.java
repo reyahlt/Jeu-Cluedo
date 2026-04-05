@@ -9,7 +9,7 @@ public class Soupcon  {
     private final ELieu lieu;
     private final EPersonnage personnage;
     private final EArme arme;
-    private  Carte carteMontrée; //null sinon
+    private Carte carteMontrée; //null sinon
     private Joueur joueurRepondant; //qui montre la carte
 
 

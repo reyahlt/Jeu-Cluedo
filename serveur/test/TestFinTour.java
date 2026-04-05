@@ -63,7 +63,7 @@ class TestFinTour {
     void finirTour_reinitialise_aDejeSoupçonne() throws Exception {
         superviseur.lancerLesDes(alice);
         superviseur.finirTour(alice);
-        assertFalse(alice.IlASoupçonner());
+        assertFalse(alice.aSoupçonne());
     }
 
     @Test
