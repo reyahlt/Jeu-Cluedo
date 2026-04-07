@@ -84,18 +84,23 @@ class TestFinTour {
     @Test
     void finirTourReinitialiseASoupconne() throws Exception {
         alice.setCaseCourante(superviseur.getPlateau().getCase(1, 1)); // Bureau
+
         bob.viderCartes();
         charles.viderCartes();
 
-        alice.soupconne(cluedo.enums.ELieu.Bureau, EPersonnage.Colonel_Moutarde, cluedo.enums.EArme.Corde);
+        alice.soupconne(cluedo.enums.ELieu.Bureau,
+                EPersonnage.Colonel_Moutarde,
+                cluedo.enums.EArme.Corde);
+
         assertTrue(alice.aSoupconne());
 
-        bob.montrerCarte(null); // résout le soupçon
+        bob.montrerCarte(null);      // Bob ne peut pas réfuter
+        charles.montrerCarte(null);  // Charles ne peut pas réfuter
+
         superviseur.finirTour(alice);
 
         assertFalse(alice.aSoupconne());
     }
-
     // =========================================================
     // Cas d'échec : ce n'est pas son tour
     // =========================================================
