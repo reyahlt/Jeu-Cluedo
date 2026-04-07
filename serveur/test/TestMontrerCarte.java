@@ -11,7 +11,6 @@ import cluedo.metier.Superviseur;
 import cluedo.plateau.PlateauCluedo;
 import exception.ActionIllegaleException;
 import exception.CarteInvalideException;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -45,7 +44,7 @@ class TestMontrerCarte {
     }
 
     private void aliceSoupconneDansBureau() throws Exception {
-        alice.setCaseCourante(plateau.getCase(1, 1));
+        alice.setCaseCourante(plateau.getCase(1, 1)); // Bureau
         alice.soupconne(ELieu.Bureau, EPersonnage.Colonel_Moutarde, EArme.Corde);
     }
 
@@ -73,9 +72,10 @@ class TestMontrerCarte {
 
     @Test
     void montrerCarteNAppartientPasAuJoueurDoitEchouer() throws Exception {
-        aliceSoupconneDansBureau();
-
         bob.viderCartes();
+        charles.viderCartes();
+
+        aliceSoupconneDansBureau();
 
         assertThrows(CarteInvalideException.class, () ->
                 bob.montrerCarte(new CarteArme(EArme.Corde)));
@@ -84,6 +84,7 @@ class TestMontrerCarte {
     @Test
     void montrerCarteNonLieeAuSoupconDoitEchouer() throws Exception {
         bob.viderCartes();
+        charles.viderCartes();
         bob.ajouterCarte(new CarteArme(EArme.Matraque));
 
         aliceSoupconneDansBureau();
@@ -106,6 +107,8 @@ class TestMontrerCarte {
     @Test
     void bobMontreCarteCorrespondante() throws Exception {
         bob.viderCartes();
+        charles.viderCartes();
+
         CarteArme corde = new CarteArme(EArme.Corde);
         bob.ajouterCarte(corde);
 
@@ -127,6 +130,7 @@ class TestMontrerCarte {
     @Test
     void cartesMontrablesBobAvecCartesCorrespondantes() throws Exception {
         bob.viderCartes();
+        charles.viderCartes();
         bob.ajouterCarte(new CarteArme(EArme.Corde));
         bob.ajouterCarte(new CarteLieu(ELieu.Bureau));
         bob.ajouterCarte(new CartePersonnage(EPersonnage.Colonel_Moutarde));
@@ -142,6 +146,7 @@ class TestMontrerCarte {
     @Test
     void cartesMontrablesBobSansCarteCorrespondante() throws Exception {
         bob.viderCartes();
+        charles.viderCartes();
         bob.ajouterCarte(new CarteArme(EArme.Matraque));
 
         aliceSoupconneDansBureau();
@@ -150,5 +155,17 @@ class TestMontrerCarte {
                 superviseur.getPartie().getHistoriqueSoupcons().get(0));
 
         assertTrue(montrables.isEmpty());
+    }
+
+    @Test
+    void montrerNullAlorsQueBobPeutRefuterDoitEchouer() throws Exception {
+        bob.viderCartes();
+        charles.viderCartes();
+        bob.ajouterCarte(new CarteArme(EArme.Corde));
+
+        aliceSoupconneDansBureau();
+
+        assertThrows(CarteInvalideException.class, () ->
+                bob.montrerCarte(null));
     }
 }

@@ -1,4 +1,3 @@
-import cluedo.carte.Carte;
 import cluedo.carte.CarteArme;
 import cluedo.enums.EArme;
 import cluedo.enums.ELieu;
@@ -8,12 +7,8 @@ import cluedo.metier.Partie;
 import cluedo.metier.Superviseur;
 import cluedo.plateau.PlateauCluedo;
 import exception.ActionIllegaleException;
-import exception.CarteInvalideException;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -50,7 +45,7 @@ class TestSoupcon {
 
     @Test
     void soupconnerDansMauvaisePieceDoitEchouer() throws Exception {
-        alice.setCaseCourante(plateau.getCase(1, 1));
+        alice.setCaseCourante(plateau.getCase(1, 1)); // Bureau
 
         assertThrows(ActionIllegaleException.class, () ->
                 alice.soupconne(ELieu.Cuisine, EPersonnage.Colonel_Moutarde, EArme.Corde));
@@ -58,7 +53,7 @@ class TestSoupcon {
 
     @Test
     void soupconnerPasLeTourDoitEchouer() throws Exception {
-        bob.setCaseCourante(plateau.getCase(1, 1));
+        bob.setCaseCourante(plateau.getCase(1, 1)); // Bureau
 
         assertThrows(ActionIllegaleException.class, () ->
                 bob.soupconne(ELieu.Bureau, EPersonnage.Colonel_Moutarde, EArme.Corde));
@@ -66,7 +61,7 @@ class TestSoupcon {
 
     @Test
     void soupconnerDeuxFoisMemeTourDoitEchouer() throws Exception {
-        alice.setCaseCourante(plateau.getCase(1, 1));
+        alice.setCaseCourante(plateau.getCase(1, 1)); // Bureau
         alice.soupconne(ELieu.Bureau, EPersonnage.Colonel_Moutarde, EArme.Corde);
 
         assertThrows(ActionIllegaleException.class, () ->
@@ -75,7 +70,7 @@ class TestSoupcon {
 
     @Test
     void soupconnerDansBonnePiecePasse() throws Exception {
-        alice.setCaseCourante(plateau.getCase(1, 1));
+        alice.setCaseCourante(plateau.getCase(1, 1)); // Bureau
 
         assertDoesNotThrow(() ->
                 alice.soupconne(ELieu.Bureau, EPersonnage.Colonel_Moutarde, EArme.Corde));
@@ -85,7 +80,7 @@ class TestSoupcon {
 
     @Test
     void soupconEnregistreDansHistorique() throws Exception {
-        alice.setCaseCourante(plateau.getCase(1, 1));
+        alice.setCaseCourante(plateau.getCase(1, 1)); // Bureau
         alice.soupconne(ELieu.Bureau, EPersonnage.Colonel_Moutarde, EArme.Corde);
 
         assertEquals(1, superviseur.getPartie().getHistoriqueSoupcons().size());
@@ -94,15 +89,15 @@ class TestSoupcon {
     @Test
     void soupconnerJoueurElimineDoitEchouer() throws Exception {
         alice.eliminer();
-        alice.setCaseCourante(plateau.getCase(1, 1));
+        alice.setCaseCourante(plateau.getCase(1, 1)); // Bureau
 
         assertThrows(ActionIllegaleException.class, () ->
                 alice.soupconne(ELieu.Bureau, EPersonnage.Colonel_Moutarde, EArme.Corde));
     }
 
     @Test
-    void deplacementImpossiblePendantSoupcon() throws Exception {
-        alice.setCaseCourante(plateau.getCase(1, 1));
+    void deplacerPendantSoupconDoitEchouer() throws Exception {
+        alice.setCaseCourante(plateau.getCase(1, 1)); // Bureau
         alice.soupconne(ELieu.Bureau, EPersonnage.Colonel_Moutarde, EArme.Corde);
 
         assertThrows(ActionIllegaleException.class, () ->
@@ -110,77 +105,67 @@ class TestSoupcon {
     }
 
     @Test
-    void montrerCarteValideTermineModeSoupcon() throws Exception {
-        alice.setCaseCourante(plateau.getCase(1, 1));
+    void finirTourPendantSoupconDoitEchouer() throws Exception {
+        alice.setCaseCourante(plateau.getCase(1, 1)); // Bureau
         alice.soupconne(ELieu.Bureau, EPersonnage.Colonel_Moutarde, EArme.Corde);
 
-        List<Carte> montrablesParBob = bob.cartesMontrables(
-                superviseur.getPartie().getHistoriqueSoupcons().get(0));
-
-        if (!montrablesParBob.isEmpty()) {
-            Carte carte = montrablesParBob.get(0);
-            Carte retour = bob.montrerCarte(carte);
-            assertEquals(carte, retour);
-        }
+        assertThrows(ActionIllegaleException.class, () ->
+                superviseur.finirTour(alice));
     }
 
     @Test
-    void montrerCarteNullSiBobNaPasDeCarteMontrable() throws Exception {
+    void lancerDesPendantSoupconDoitEchouer() throws Exception {
+        alice.setCaseCourante(plateau.getCase(1, 1)); // Bureau
+        alice.soupconne(ELieu.Bureau, EPersonnage.Colonel_Moutarde, EArme.Corde);
+
+        assertThrows(ActionIllegaleException.class, () ->
+                superviseur.lancerLesDes(alice));
+    }
+
+    @Test
+    void accuserPendantSoupconDoitEchouer() throws Exception {
+        alice.setCaseCourante(plateau.getCase(1, 1)); // Bureau
+        alice.soupconne(ELieu.Bureau, EPersonnage.Colonel_Moutarde, EArme.Corde);
+
+        assertThrows(ActionIllegaleException.class, () ->
+                superviseur.accuser(alice, EPersonnage.Colonel_Moutarde, ELieu.Bureau, EArme.Corde));
+    }
+
+    @Test
+    void finirTourApresResolutionDuSoupconReinitialiseASoupconne() throws Exception {
+        alice.setCaseCourante(plateau.getCase(1, 1)); // Bureau
+
         bob.viderCartes();
         charles.viderCartes();
 
-        alice.setCaseCourante(plateau.getCase(1, 1));
         alice.soupconne(ELieu.Bureau, EPersonnage.Colonel_Moutarde, EArme.Corde);
 
-        Carte retour = bob.montrerCarte(null);
-        assertNull(retour);
+        assertTrue(alice.aSoupconne());
+
+        bob.montrerCarte(null);
+        charles.montrerCarte(null);
+
+        superviseur.finirTour(alice);
+
+        assertFalse(alice.aSoupconne());
     }
 
     @Test
-    void montrerCarteSansSoupconEnCoursDoitEchouer() {
-        assertThrows(ActionIllegaleException.class, () ->
-                bob.montrerCarte(null));
+    void soupconDeplaceLeSuspectDansLaPiece() throws Exception {
+        bob.setCaseCourante(plateau.getCase(22, 22)); // Cuisine au départ du test
+        alice.setCaseCourante(plateau.getCase(1, 1)); // Bureau
+
+        alice.soupconne(ELieu.Bureau, EPersonnage.Colonel_Moutarde, EArme.Corde);
+
+        assertEquals(ELieu.Bureau, bob.getPieceActuelle());
     }
 
     @Test
-    void montrerCarteMauvaisJoueurDoitEchouer() throws Exception {
-        alice.setCaseCourante(plateau.getCase(1, 1));
+    void soupconDeplaceLArmeDansLaPiece() throws Exception {
+        alice.setCaseCourante(plateau.getCase(1, 1)); // Bureau
+
         alice.soupconne(ELieu.Bureau, EPersonnage.Colonel_Moutarde, EArme.Corde);
 
-        assertThrows(ActionIllegaleException.class, () ->
-                charles.montrerCarte(null));
-    }
-
-    @Test
-    void montrerCarteQuiNAppartientPasAuJoueurDoitEchouer() throws Exception {
-        alice.setCaseCourante(plateau.getCase(1, 1));
-        alice.soupconne(ELieu.Bureau, EPersonnage.Colonel_Moutarde, EArme.Corde);
-
-        Carte carteEtrangere = new CarteArme(EArme.Matraque);
-        bob.viderCartes();
-
-        assertThrows(CarteInvalideException.class, () ->
-                bob.montrerCarte(carteEtrangere));
-    }
-
-    @Test
-    void montrerCarteNonLieeAuSoupconDoitEchouer() throws Exception {
-        bob.viderCartes();
-        bob.ajouterCarte(new CarteArme(EArme.Matraque));
-
-        alice.setCaseCourante(plateau.getCase(1, 1));
-        alice.soupconne(ELieu.Bureau, EPersonnage.Colonel_Moutarde, EArme.Corde);
-
-        assertThrows(CarteInvalideException.class, () ->
-                bob.montrerCarte(new CarteArme(EArme.Matraque)));
-    }
-
-    @Test
-    void auteurSoupconNePeutPasRepondre() throws Exception {
-        alice.setCaseCourante(plateau.getCase(1, 1));
-        alice.soupconne(ELieu.Bureau, EPersonnage.Colonel_Moutarde, EArme.Corde);
-
-        assertThrows(ActionIllegaleException.class, () ->
-                alice.montrerCarte(null));
+        assertEquals(ELieu.Bureau, superviseur.getPartie().getPositionArme(EArme.Corde));
     }
 }
