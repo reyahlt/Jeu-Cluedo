@@ -1,7 +1,7 @@
 package cluedo.plateau;
 
-import cluedo.histoire.ELieu;
-import metiers.Joueur;
+import cluedo.enums.ELieu;
+import cluedo.metier.Joueur;
 
 import java.util.ArrayList;
 

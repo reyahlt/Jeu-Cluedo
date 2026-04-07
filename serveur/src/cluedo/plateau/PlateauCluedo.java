@@ -1,7 +1,8 @@
 package cluedo.plateau;
 
-import cluedo.histoire.ELieu;
+import cluedo.enums.ELieu;
 import exception.PlateauCluedoException;
+
 
 import java.io.BufferedReader;
 import java.io.IOException;
