@@ -100,7 +100,7 @@ public class Joueur {
     public void eliminer() { this.elimine = true; }
 
     public void soupconne(ELieu lieu, EPersonnage suspect, EArme arme)
-            throws PartieNonDemarreeException, ActionIllegaleException, PlateauCluedoException, ReponseDejaDonneeException {
+            throws ActionIllegaleException, PlateauCluedoException,  PartieNonDemarreeException {
         Superviseur.getInstance().soupconne(this, suspect, lieu, arme);
     }
     public int lancerLesDes() throws ActionIllegaleException {

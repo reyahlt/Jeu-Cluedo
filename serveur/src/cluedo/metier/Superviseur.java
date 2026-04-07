@@ -248,8 +248,7 @@ public class Superviseur {
      * @throws ActionIllegaleException    si l'action est illégale
      */
     public void soupconne(Joueur joueur, EPersonnage personnage, ELieu lieu, EArme arme)
-            throws PartieNonDemarreeException, ActionIllegaleException,
-            ReponseDejaDonneeException, PlateauCluedoException {
+            throws PartieNonDemarreeException, ActionIllegaleException, PlateauCluedoException {
         verifierPartieDemarree();
         verifierJoueurCourant(joueur);
 
@@ -453,17 +452,16 @@ public class Superviseur {
         ArrayList<Carte> cartesMontrables = repondant.cartesMontrables(soupconEnCours);
 
 
-        // Le joueur n'a aucune carte à montrer
-        if (cartesMontrables.isEmpty()){
-            passerAuRefuteurSuivant();
-            return null;}
-
-        // Le joueur a des cartes mais n'en a pas choisi
-        if (carteChoisie == null)
-            throw new CarteInvalideException(
-                    repondant.getNom() + " doit choisir une carte parmi : " + cartesMontrables);
-
-
+        // Cas où le joueur choisit de ne rien montrer
+        if (carteChoisie == null) {
+            if (cartesMontrables.isEmpty()) {
+                passerAuRefuteurSuivant();
+                return null;
+            } else {
+                throw new CarteInvalideException(
+                        repondant.getNom() + " doit choisir une carte parmi : " + cartesMontrables);
+            }
+        }
         if (!repondant.getCartes().contains(carteChoisie))
             throw new CarteInvalideException(
                     repondant.getNom() + " ne possède pas la carte " + carteChoisie.getNom() + ".");
@@ -472,8 +470,9 @@ public class Superviseur {
         if (!cartesMontrables.contains(carteChoisie))
             throw new CarteInvalideException(
                     "La carte " + carteChoisie.getNom() + " ne correspond pas au soupçon.");
-        terminerModeSoupcon(); //sortir du mode soupcon car on a refuté
+
         soupconEnCours.enregistrerReponse(carteChoisie, repondant);
+        terminerModeSoupcon(); //sortir du mode soupcon car on a refuté
         return carteChoisie;
     }
 

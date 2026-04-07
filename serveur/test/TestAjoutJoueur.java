@@ -1,4 +1,3 @@
-
 import cluedo.enums.EPersonnage;
 import cluedo.metier.Partie;
 import cluedo.metier.Superviseur;
@@ -23,6 +22,10 @@ class TestAjoutJoueur {
         superviseur = new Superviseur(plateau);
     }
 
+    // =========================================================
+    // Cas nominaux
+    // =========================================================
+
     @Test
     void ajoutJoueurNominal() throws Exception {
         superviseur.ajouterJoueur("Alice", EPersonnage.Mademoiselle_Rose);
@@ -30,9 +33,36 @@ class TestAjoutJoueur {
         assertEquals(1, superviseur.getJoueurs().size());
         assertEquals("Alice", superviseur.getJoueurs().get(0).getNom());
         assertEquals(EPersonnage.Mademoiselle_Rose, superviseur.getJoueurs().get(0).getPersonnage());
+        // Avant démarrage : 0 cartes et pas d'énigme
         assertEquals(0, superviseur.getJoueurs().get(0).getNombreCartes());
         assertNull(superviseur.getPartie().getEnigme());
     }
+
+    @Test
+    void ajoutPlusieursJoueursDifferents() throws Exception {
+        superviseur.ajouterJoueur("Alice",   EPersonnage.Mademoiselle_Rose);
+        superviseur.ajouterJoueur("Bob",     EPersonnage.Colonel_Moutarde);
+        superviseur.ajouterJoueur("Charles", EPersonnage.Madame_Leblanc);
+
+        assertEquals(3, superviseur.getJoueurs().size());
+    }
+
+    @Test
+    void ajoutSixJoueursMaximum() throws Exception {
+        superviseur.ajouterJoueur("J1", EPersonnage.Mademoiselle_Rose);
+        superviseur.ajouterJoueur("J2", EPersonnage.Colonel_Moutarde);
+        superviseur.ajouterJoueur("J3", EPersonnage.Madame_Leblanc);
+        superviseur.ajouterJoueur("J4", EPersonnage.Reverend_Olive);
+        superviseur.ajouterJoueur("J5", EPersonnage.Madame_Pervenche);
+        superviseur.ajouterJoueur("J6", EPersonnage.Professeur_Violet);
+
+
+        assertEquals(6, superviseur.getJoueurs().size());
+    }
+
+    // =========================================================
+    // Cas d'échec : nom ou personnage déjà pris
+    // =========================================================
 
     @Test
     void ajoutJoueurNomDejaPrisDoitEchouer() throws Exception {
@@ -43,6 +73,14 @@ class TestAjoutJoueur {
     }
 
     @Test
+    void ajoutJoueurNomDejaPrisInsensibleCasseDoitEchouer() throws Exception {
+        superviseur.ajouterJoueur("Alice", EPersonnage.Mademoiselle_Rose);
+
+        assertThrows(JoueurDejaExistantException.class, () ->
+                superviseur.ajouterJoueur("ALICE", EPersonnage.Colonel_Moutarde));
+    }
+
+    @Test
     void ajoutJoueurPersonnageDejaPrisDoitEchouer() throws Exception {
         superviseur.ajouterJoueur("Alice", EPersonnage.Mademoiselle_Rose);
 
@@ -50,14 +88,32 @@ class TestAjoutJoueur {
                 superviseur.ajouterJoueur("Bob", EPersonnage.Mademoiselle_Rose));
     }
 
+
     @Test
     void ajoutJoueurApresDemarrageDoitEchouer() throws Exception {
-        superviseur.ajouterJoueur("Alice", EPersonnage.Mademoiselle_Rose);
-        superviseur.ajouterJoueur("Bob", EPersonnage.Colonel_Moutarde);
+        superviseur.ajouterJoueur("Alice",   EPersonnage.Mademoiselle_Rose);
+        superviseur.ajouterJoueur("Bob",     EPersonnage.Colonel_Moutarde);
         superviseur.ajouterJoueur("Charles", EPersonnage.Madame_Leblanc);
         superviseur.demarrerPartie();
 
         assertThrows(PartieDejaDemarreeException.class, () ->
                 superviseur.ajouterJoueur("Donald", EPersonnage.Reverend_Olive));
+    }
+
+    // =========================================================
+    // Cas d'échec : dépassement du maximum
+    // =========================================================
+
+    @Test
+    void ajoutSetiemeJoueurDoitEchouer() throws Exception {
+        superviseur.ajouterJoueur("J1", EPersonnage.Mademoiselle_Rose);
+        superviseur.ajouterJoueur("J2", EPersonnage.Colonel_Moutarde);
+        superviseur.ajouterJoueur("J3", EPersonnage.Madame_Leblanc);
+        superviseur.ajouterJoueur("J4", EPersonnage.Reverend_Olive);
+        superviseur.ajouterJoueur("J5", EPersonnage.Madame_Pervenche);
+        superviseur.ajouterJoueur("J6", EPersonnage.Professeur_Violet);
+
+        assertThrows(IllegalArgumentException.class, () ->
+                superviseur.ajouterJoueur("J7", EPersonnage.Mademoiselle_Rose));
     }
 }
