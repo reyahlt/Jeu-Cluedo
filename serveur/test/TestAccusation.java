@@ -72,7 +72,7 @@ class TestAccusation {
         ELieu       l = enigme.getLieu().getLieu();
         EArme       a = enigme.getArme().getArme();
 
-        Accusation acc = superviseur.accuser(alice, p, l, a);
+        Accusation acc = alice.accuse( p, l, a);
 
         assertTrue(acc.isCorrecte());
         assertTrue(superviseur.getPartie().isTerminee());
@@ -83,7 +83,7 @@ class TestAccusation {
     @Test
     void accusationEnregistreeDansHistorique() throws Exception {
         Enigme enigme = superviseur.getPartie().getEnigme();
-        superviseur.accuser(alice,
+        alice.accuse(
                 enigme.getPersonnage().getPersonnage(),
                 enigme.getLieu().getLieu(),
                 enigme.getArme().getArme());
@@ -99,13 +99,13 @@ class TestAccusation {
         EArme       mauvaiseA = trouverAutreArme(enigme.getArme().getArme());
 
         // Alice s'accuse (incorrectement) → éliminée
-        superviseur.accuser(alice, mauvaisP, mauvaiseL, mauvaiseA);
+        alice.accuse( mauvaisP, mauvaiseL, mauvaiseA);
         superviseur.finirTour(alice); // même si éliminée, finir le tour pour passer à Bob
         // Bob s'accuse
-        superviseur.accuser(bob, mauvaisP, mauvaiseL, mauvaiseA);
+        bob.accuse( mauvaisP, mauvaiseL, mauvaiseA);
         superviseur.finirTour(bob);
         // Charles s'accuse
-        superviseur.accuser(charles, mauvaisP, mauvaiseL, mauvaiseA);
+        charles.accuse(mauvaisP, mauvaiseL, mauvaiseA);
 
         assertTrue(superviseur.getPartie().isTerminee());
         assertNull(superviseur.getPartie().getGagnant());

@@ -73,7 +73,7 @@ class TestDemarragePartie {
         assertNotNull(superviseur.getPartie().getEnigme().getLieu());
         assertNotNull(superviseur.getPartie().getEnigme().getArme());
 
-        // Chaque joueur reçoit 6 cartes (18 cartes / 3 joueurs)
+        // Chaque joueur reçoit 6 cartes (18 cartes/3 joueurs)
         for (Joueur j : superviseur.getJoueurs()) {
             assertEquals(6, j.getNombreCartes());
         }

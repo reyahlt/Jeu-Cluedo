@@ -35,7 +35,7 @@ class TestDeplacements {
         bob   = superviseur.getJoueurParNom("Bob");
     }
 
-    // Helper : place alice en (8,7) avec 1 déplacement prêt
+    // place alice en (8,7) avec 1 déplacement prêt
     private void placerAlice8_7Avec1Dep() throws Exception {
         alice.setCaseCourante(plateau.getCase(8, 7));
         alice.lancerLesDes();

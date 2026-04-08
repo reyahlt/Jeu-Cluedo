@@ -143,9 +143,10 @@ public class Joueur {
         Superviseur.getInstance().soupconne(this, suspect, lieu, arme);
     }
 
-    public void accuse(EPersonnage suspect,ELieu lieu, EArme arme)
+    public Accusation accuse(EPersonnage suspect, ELieu lieu, EArme arme)
             throws ActionIllegaleException,  PartieNonDemarreeException {
-        Superviseur.getInstance().accuser(this, suspect, lieu, arme);
+       return  Superviseur.getInstance().accuser(this, suspect, lieu, arme);
+
     }
 
     /**
