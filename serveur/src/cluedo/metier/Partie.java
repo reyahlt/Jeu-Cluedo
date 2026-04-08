@@ -12,12 +12,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * Représente l'état global d'une partie de Cluedo.
- *
- * Gère le deck complet de 21 cartes, tire l'énigme secrète au démarrage,
- * et conserve l'historique des soupçons et accusations.
- */
+
 public class Partie {
     private final List<Carte> toutesLesCartes;
     private Enigme enigme;

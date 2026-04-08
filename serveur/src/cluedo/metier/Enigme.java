@@ -7,10 +7,6 @@ import cluedo.enums.EArme;
 import cluedo.enums.ELieu;
 import cluedo.enums.EPersonnage;
 
-/**
- * Représente l'énigme secrète du Cluedo : un personnage coupable,
- * un lieu du crime et une arme utilisée.
- */
 public class Enigme {
 
     private final CartePersonnage personnage;

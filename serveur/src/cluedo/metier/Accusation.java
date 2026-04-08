@@ -5,13 +5,6 @@ import cluedo.enums.ELieu;
 import cluedo.enums.EPersonnage;
 
 
-
-/**
- * Une accusation finale formulée par un joueur.
- *
- * Contrairement au soupçon, l'accusation est définitive :
- * si correcte, le joueur gagne ; sinon, il est éliminé.
- */
 public class Accusation {
 
     private  Joueur auteur;

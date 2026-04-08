@@ -13,17 +13,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * Le Superviseur est l'objet central de la partie métier du Cluedo.
- *
- * Il orchestre la partie : gestion des joueurs, respect des règles,
- * déroulement des tours, soupçons, accusations.
- *
- * Il utilise directement {@link PlateauCluedo} et {@link CaseCluedo}
- * tels que fournis par l'enseignant.
- *
- * Aucune IHM, réseau ou base de données dans cette classe.
- */
 public class Superviseur {
 
     /**

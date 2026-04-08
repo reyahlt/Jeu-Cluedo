@@ -1,12 +1,5 @@
 package cluedo.metier;
 
-/**
- * Représente un dé à 6 faces utilisé dans le jeu Cluedo.
- *
- * Un dé conserve sa dernière valeur obtenue après un lancer.
- * Le Cluedo utilise deux dés dont la somme détermine
- * le nombre de déplacements du joueur.
- */
 public class De {
 
 
