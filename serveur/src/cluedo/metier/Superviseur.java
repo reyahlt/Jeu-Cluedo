@@ -413,9 +413,12 @@ public class Superviseur {
      * @return le joueur, ou null si introuvable
      */
     public Joueur getJoueurParNom(String nom) {
-        return joueurs.stream()
-                .filter(j -> j.getNom().equalsIgnoreCase(nom))
-                .findFirst().orElse(null);
+        for (Joueur j : joueurs) {
+            if (j.getNom().equalsIgnoreCase(nom)) {
+                return j;
+            }
+        }
+        return null;
     }
 
 
