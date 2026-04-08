@@ -39,6 +39,18 @@ public class Soupcon  {
     public Carte getCarteMontrée()     { return carteMontrée; }
     public Joueur getJoueurRepondant() { return joueurRepondant; }
 
+    /**
+     * Enregistre la réponse d'un joueur à ce soupçon en indiquant la carte montrée.
+     *
+     * Une seule réponse est autorisée par soupçon. Toute tentative d'enregistrer
+     * une seconde réponse lèvera une exception.
+     *
+     *
+     * @param carte  la carte montrée par le joueur en réponse au soupçon, ne doit pas être {@code null}
+     * @param joueur le joueur qui montre la carte, ne doit pas être {@code null}
+     * @throws IllegalArgumentException   si {@code carte} ou {@code joueur} est {@code null}
+     * @throws ReponseDejaDonneeException si une réponse a déjà été enregistrée pour ce soupçon
+     */
     public void enregistrerReponse(Carte carte, Joueur joueur) throws ReponseDejaDonneeException {
         if (carte == null || joueur == null)
             throw new IllegalArgumentException("Carte et joueur ne peuvent pas être null.");

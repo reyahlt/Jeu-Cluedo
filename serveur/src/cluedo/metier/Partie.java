@@ -27,13 +27,21 @@ public class Partie {
     private Joueur gagnant;
     private final java.util.Map<EArme, ELieu> positionsArmes = new java.util.HashMap<>();
     private static Partie instance;
+
+
     public static Partie getInstance() {
         if (instance == null) {
             instance = new Partie();
         }
         return instance;
     }
-
+    /**
+     * Construit une nouvelle partie de Cluedo
+     *
+     * Les historiques de soupçons et d'accusations sont initialisés vides,
+     * et la partie est marquée comme non terminée sans gagnant désigné.
+     *
+     */
     public Partie() {
         this.toutesLesCartes = new ArrayList<>();
         this.historiqueSoupcons = new ArrayList<>();

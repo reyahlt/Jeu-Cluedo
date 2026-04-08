@@ -25,7 +25,18 @@ public class Joueur {
     private De de1;
     private  De de2;
 
-
+    /**
+     * Construit un joueur avec un nom et un personnage associé.
+     *
+     * Le joueur est initialisé dans un état prêt pour le début de la partie :
+     * aucune carte en main, aucun dé lancé, aucun soupçon émis et non éliminé.
+     *
+     *
+     * @param nom le nom du joueur, ne doit pas être {@code null} ni vide
+     * @param p   le personnage incarné par le joueur, ne doit pas être {@code null}
+     * @throws IllegalArgumentException si {@code nom} est {@code null} ou vide,
+     *                                  ou si {@code p} est {@code null}
+     */
     public  Joueur(String nom, EPersonnage p) {
         if (nom == null || nom.trim().isEmpty())
             throw new IllegalArgumentException("Le nom du joueur ne peut pas être vide.");
@@ -89,6 +100,18 @@ public class Joueur {
         this.deplacementsRestants = nb;
     }
 
+    /**
+     * Définit la case courante du joueur sur le plateau.
+     *
+     * Si le joueur occupe déjà une case, celle-ci est libérée avant le déplacement.
+     * La nouvelle case est ensuite marquée comme occupée par ce joueur.
+     * Passer {@code null} permet de retirer le joueur du plateau sans l'affecter
+     * à une nouvelle case.
+     *
+     *
+     * @param nvlCase la nouvelle case à occuper, ou {@code null} pour retirer
+     *                le joueur du plateau
+     */
     public void setCaseCourante(CaseCluedo nvlCase) {
         if (caseActuel != null)
             caseActuel.liberer();
@@ -99,10 +122,37 @@ public class Joueur {
 
     public void eliminer() { this.elimine = true; }
 
+    /**
+     * Émet un soupçon au nom du joueur en désignant un suspect, un lieu et une arme.
+     *
+     * Délègue l'opération au {@link Superviseur} qui valide le contexte de jeu
+     * et enregistre le soupçon dans la partie en cours.
+     *
+     *
+     * @param lieu    le lieu où le crime aurait été commis
+     * @param suspect le personnage soupçonné d'être le meurtrier
+     * @param arme    l'arme supposée avoir été utilisée
+     * @throws PartieNonDemarreeException si la partie n'a pas encore été démarrée
+     * @throws ActionIllegaleException    si le joueur n'est pas autorisé à émettre un soupçon
+     *                                    à ce moment de la partie
+     * @throws PlateauCluedoException     si le déplacement du suspect vers le lieu désigné
+     *                                    est impossible sur le plateau
+     */
     public void soupconne(ELieu lieu, EPersonnage suspect, EArme arme)
             throws ActionIllegaleException, PlateauCluedoException,  PartieNonDemarreeException {
         Superviseur.getInstance().soupconne(this, suspect, lieu, arme);
     }
+
+    /**
+     * Lance les deux dés du joueur et initialise son nombre de déplacements pour ce tour.
+     *
+     * La somme des deux dés détermine le nombre de cases dont le joueur
+     * pourra se déplacer. Les dés ne peuvent être lancés qu'une seule fois par tour.
+     *
+     *
+     * @return la somme des deux dés, comprise entre 2 et 12 inclus
+     * @throws ActionIllegaleException si le joueur a déjà lancé les dés durant ce tour
+     */
     public int lancerLesDes() throws ActionIllegaleException {
         if (dejaLanceLeDes)
             throw new ActionIllegaleException(nom + " a déjà lancé les dés");
@@ -114,11 +164,36 @@ public class Joueur {
 
     public De getDe1() { return de1; }
     public De getDe2() { return de2; }
-
+    /**
+     * Permet au joueur de montrer une de ses cartes en réponse à une suggestion.
+     *
+     * Délègue l'opération au {@link Superviseur} qui valide le contexte de jeu
+     * et l'action avant de l'enregistrer.
+     *
+     *
+     * @param carteChoisie la carte que le joueur souhaite montrer
+     * @return la carte montrée
+     * @throws PartieNonDemarreeException si la partie n'a pas encore été démarrée
+     * @throws ActionIllegaleException    si le joueur n'est pas autorisé à effectuer cette action à ce moment
+     * @throws CarteInvalideException     si la carte choisie n'appartient pas au joueur ou est invalide
+     * @throws ReponseDejaDonneeException si le joueur a déjà répondu à la suggestion en cours
+     */
     public Carte montrerCarte(Carte carteChoisie)
             throws PartieNonDemarreeException, ActionIllegaleException, CarteInvalideException, ReponseDejaDonneeException {
         return Superviseur.getInstance().montrerCarte(this, carteChoisie);
     }
+
+
+    /**
+     * Retourne la liste des cartes du joueur qui peuvent être montrées en réponse à un soupçon.
+     *
+     * Une carte est montrable si elle correspond à l'un des trois éléments du soupçon :
+     * le personnage, l'arme ou le lieu. La liste retournée peut contenir entre 0 et 3 cartes.
+     *
+     *
+     * @param soupcon le soupçon émis par un joueur adverse, contenant un personnage, une arme et un lieu
+     * @return la liste des cartes du joueur correspondant au soupçon, vide si aucune carte ne correspond
+     */
 
     public ArrayList<Carte> cartesMontrables(Soupcon soupcon) {
         ArrayList<Carte> result = new ArrayList<>();
@@ -147,12 +222,43 @@ public class Joueur {
         return result;
     }
 
+    /**
+     * Marque le joueur comme ayant déjà émis un soupçon durant ce tour.
+     *
+     * Un joueur ne peut émettre qu'un seul soupçon par tour. Toute tentative
+     * d'en émettre un second lèvera une exception.
+     *
+     *
+     * @throws ActionIllegaleException si le joueur a déjà émis un soupçon durant ce tour
+     */
     public void marquerSoupcon() throws ActionIllegaleException {
         if (aSoupconner)
             throw new ActionIllegaleException(nom + " a déjà soupçonné ce tour.");
         this.aSoupconner = true;
     }
 
+
+    /**
+     * Déplace le joueur vers la case cible spécifiée.
+     *
+     * Le déplacement est autorisé dans les deux cas suivants :
+     *
+     *
+     *   La case cible est voisine de la case actuelle du joueur.
+     *   La case cible appartient à la même pièce que la case actuelle (déplacement intra-pièce).
+     *
+     *
+     * En cas de passage secret (déplacement d'une pièce vers une pièce différente),
+     * tous les déplacements restants sont consommés. Sinon, un seul déplacement est déduit.
+     *
+     *
+     * @param caseCible la case vers laquelle le joueur souhaite se déplacer
+     * @throws ActionIllegaleException      si le joueur n'a pas encore été placé sur le plateau,
+     *                                      ou s'il n'a pas encore lancé les dés
+     * @throws DeplacementImpossibleException si le joueur n'a plus de déplacements disponibles,
+     *                                        si la case cible n'est pas accessible depuis la position actuelle,
+     *                                        ou si la case cible est déjà occupée
+     */
     public void deplacerVers(CaseCluedo caseCible)
             throws ActionIllegaleException, DeplacementImpossibleException {
         if (caseActuel == null)

@@ -57,6 +57,23 @@ public class Superviseur {
         return instance;
     }
 
+
+    /**
+     * Construit le Superviseur et initialise une nouvelle partie.
+     * <p>
+     * Le Superviseur suit le pattern Singleton : une seule instance peut exister
+     * à la fois. Toute tentative de créer un second Superviseur sans avoir
+     * appelé {@link #reset()} au préalable lèvera une exception.
+     * </p>
+     * <p>
+     * La création du Superviseur réinitialise automatiquement la {@link Partie}
+     * afin de garantir un état de jeu propre.
+     * </p>
+     *
+     * @param plateau le plateau de jeu à utiliser, ne doit pas être {@code null}
+     * @throws IllegalArgumentException si {@code plateau} est {@code null}
+     * @throws IllegalStateException    si une instance du Superviseur existe déjà
+     */
     public Superviseur(PlateauCluedo plateau) {
         if (plateau == null) throw new IllegalArgumentException("Le plateau ne peut pas être nul.");
         if (instance != null)
@@ -224,6 +241,18 @@ public class Superviseur {
         CaseCluedo caseCible = plateau.getCase(ligne, colonne);
         joueur.deplacerVers(caseCible);
     }
+
+    /**
+     * Passe au joueur suivant devant réfuter le soupçon en cours.
+     * <p>
+     * Si le joueur suivant est celui qui a émis le soupçon, cela signifie que
+     * tous les joueurs ont été consultés sans qu'aucun n'ait pu réfuter.
+     * Le mode soupçon est alors terminé sans réfutation.
+     * Sinon, l'index du réfuteur courant est mis à jour vers le joueur suivant.
+     * </p>
+     *
+     * @throws PartieNonDemarreeException si la partie n'a pas encore été démarrée
+     */
     private void passerAuRefuteurSuivant() throws PartieNonDemarreeException {
         Joueur actuel = joueurs.get(indexJoueurDevantRefuter);
         Joueur suivant = getJoueurSuivant(actuel);
@@ -347,11 +376,16 @@ public class Superviseur {
     }
 
     /**
-     * Termine le tour du joueur courant et passe au suivant.
+     * Termine le tour du joueur courant et passe au joueur suivant non éliminé.
+     * <p>
+     * Le tour suivant est attribué au prochain joueur actif dans l'ordre circulaire.
+     * Les joueurs éliminés sont automatiquement ignorés lors du passage au tour suivant.
+     * </p>
      *
-     * @param joueur le joueur qui finit son tour
-     * @throws PartieNonDemarreeException si la partie n'est pas démarrée
-     * @throws ActionIllegaleException    si ce n'est pas son tour
+     * @param joueur le joueur souhaitant terminer son tour
+     * @throws PartieNonDemarreeException si la partie n'a pas encore été démarrée
+     * @throws ActionIllegaleException    si un soupçon est en cours et empêche la fin du tour,
+     *                                    ou si ce n'est pas le tour du joueur spécifié
      */
     public void finirTour(Joueur joueur)
             throws PartieNonDemarreeException, ActionIllegaleException {
@@ -425,6 +459,39 @@ public class Superviseur {
             throw new ActionIllegaleException("Ce n'est pas le tour de " + joueur.getNom() + ".");
     }
 
+
+    /**
+     * Permet à un joueur de montrer une carte en réfutation d'un soupçon en cours.
+     * <p>
+     * La méthode effectue plusieurs validations avant d'enregistrer la réponse :
+     * </p>
+     * <ul>
+     *   <li>La partie doit être démarrée et un soupçon doit être en cours.</li>
+     *   <li>Le joueur répondant ne peut pas être celui qui a émis le soupçon.</li>
+     *   <li>Seul le joueur désigné comme prochain réfuteur peut répondre.</li>
+     *   <li>Le joueur répondant ne doit pas être éliminé.</li>
+     *   <li>Si le joueur ne possède aucune carte montrable, il passe automatiquement
+     *       au réfuteur suivant en fournissant {@code null}.</li>
+     *   <li>La carte choisie doit appartenir au joueur et correspondre au soupçon.</li>
+     * </ul>
+     * <p>
+     * Si la réfutation est valide, la réponse est enregistrée dans le soupçon en cours
+     * et le mode soupçon est terminé.
+     * </p>
+     *
+     * @param repondant   le joueur qui répond au soupçon
+     * @param carteChoisie la carte que le joueur souhaite montrer,
+     *                     ou {@code null} s'il ne peut montrer aucune carte
+     * @return la carte montrée, ou {@code null} si le joueur passe au réfuteur suivant
+     * @throws PartieNonDemarreeException si la partie n'a pas encore été démarrée
+     * @throws ActionIllegaleException    si aucun soupçon n'est en cours, si le joueur tente
+     *                                    de répondre à son propre soupçon, si ce n'est pas
+     *                                    son tour de réfuter, ou s'il est éliminé
+     * @throws CarteInvalideException     si le joueur possède des cartes montrables mais fournit
+     *                                    {@code null}, si la carte ne lui appartient pas,
+     *                                    ou si elle ne correspond pas au soupçon
+     * @throws ReponseDejaDonneeException si une réponse a déjà été enregistrée pour ce soupçon
+     */
     public Carte montrerCarte(Joueur repondant, Carte carteChoisie)
             throws PartieNonDemarreeException, ActionIllegaleException, CarteInvalideException, ReponseDejaDonneeException {
         verifierPartieDemarree();
@@ -475,16 +542,37 @@ public class Superviseur {
         terminerModeSoupcon(); //sortir du mode soupcon car on a refuté
         return carteChoisie;
     }
-
+    /**
+     * Termine le mode soupçon et réinitialise tous les états associés.
+     *
+     * Remet à zéro l'ensemble des attributs liés au soupçon en cours :
+     * le mode soupçon est désactivé, le soupçon effacé et les index
+     * des joueurs concernés réinitialisés à {@code -1}.
+     *
+     */
     private void terminerModeSoupcon() {
         this.modeSoupcon = false;
         this.soupconEnCours = null;
         this.indexJoueurSoupcon = -1;
         this.indexJoueurDevantRefuter = -1;
     }
+
     public static void reset() {
         instance = null;
     }
+
+    /**
+     * Recherche et retourne une case libre appartenant à la pièce spécifiée sur le plateau.
+     * <p>
+     * Parcourt l'intégralité du plateau (25 lignes × 24 colonnes) et retourne
+     * la première case trouvée qui appartient à la pièce indiquée et qui est libre.
+     * </p>
+     *
+     * @param lieu la pièce dans laquelle chercher une case libre
+     * @return la première {@link CaseCluedo} libre trouvée dans la pièce
+     * @throws PlateauCluedoException si le plateau est inaccessible ou invalide
+     * @throws IllegalStateException  si aucune case libre n'est disponible dans la pièce spécifiée
+     */
     private CaseCluedo trouverUneCaseLibreDeLaPiece(ELieu lieu) throws PlateauCluedoException {
         for (int ligne = 0; ligne < 25; ligne++) {
             for (int colonne = 0; colonne < 24; colonne++) {
@@ -496,6 +584,19 @@ public class Superviseur {
         }
         throw new IllegalStateException("Aucune case libre trouvée dans la pièce " + lieu);
     }
+
+    /**
+     * Déplace le joueur incarnant le personnage spécifié dans la pièce indiquée.
+     * <p>
+     * Parcourt la liste des joueurs pour trouver celui qui incarne le personnage,
+     * puis le place sur une case libre de la pièce cible.
+     * Si aucun joueur n'incarne ce personnage, aucune action n'est effectuée.
+     * </p>
+     *
+     * @param personnage le personnage à déplacer
+     * @param lieu       la pièce de destination dans laquelle placer le personnage
+     * @throws PlateauCluedoException si aucune case libre n'est disponible dans la pièce cible
+     */
     private void deplacerSuspectDansLaPiece(EPersonnage personnage, ELieu lieu)
             throws PlateauCluedoException {
         for (Joueur j : joueurs) {

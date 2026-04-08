@@ -25,9 +25,13 @@ public class De {
     }
 
     /**
-     * génère aléatoirement une valeur entre 1 et 6}.
+     * Lance le dé et génère une valeur aléatoire.
      *
-     * @return la valeur obtenue
+     * La valeur obtenue est comprise entre 1 et {@link #FACES} inclus,
+     * et est mémorisée dans l'attribut {@code valeur}.
+     *
+     *
+     * @return la valeur obtenue après le lancer, entre 1 et {@link #FACES} inclus
      */
     public int lancer() {
         valeur = (int) (Math.random() * FACES) + 1;
