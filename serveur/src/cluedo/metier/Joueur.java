@@ -32,10 +32,10 @@ public class Joueur {
      * aucune carte en main, aucun dé lancé, aucun soupçon émis et non éliminé.
      *
      *
-     * @param nom le nom du joueur, ne doit pas être {@code null} ni vide
-     * @param p   le personnage incarné par le joueur, ne doit pas être {@code null}
-     * @throws IllegalArgumentException si {@code nom} est {@code null} ou vide,
-     *                                  ou si {@code p} est {@code null}
+     * @param nom le nom du joueur, ne doit pas être  null ni vide
+     * @param p   le personnage incarné par le joueur, ne doit pas être  null
+     * @throws IllegalArgumentException si  nom est null ou vide,
+     *                                  ou si  p est  null
      */
     public  Joueur(String nom, EPersonnage p) {
         if (nom == null || nom.trim().isEmpty())
@@ -105,11 +105,11 @@ public class Joueur {
      *
      * Si le joueur occupe déjà une case, celle-ci est libérée avant le déplacement.
      * La nouvelle case est ensuite marquée comme occupée par ce joueur.
-     * Passer {@code null} permet de retirer le joueur du plateau sans l'affecter
+     * Passer  null permet de retirer le joueur du plateau sans l'affecter
      * à une nouvelle case.
      *
      *
-     * @param nvlCase la nouvelle case à occuper, ou {@code null} pour retirer
+     * @param nvlCase la nouvelle case à occuper, ou  null pour retirer
      *                le joueur du plateau
      */
     public void setCaseCourante(CaseCluedo nvlCase) {
@@ -125,7 +125,7 @@ public class Joueur {
     /**
      * Émet un soupçon au nom du joueur en désignant un suspect, un lieu et une arme.
      *
-     * Délègue l'opération au {@link Superviseur} qui valide le contexte de jeu
+     * Délègue l'opération au  Superviseur qui valide le contexte de jeu
      * et enregistre le soupçon dans la partie en cours.
      *
      *
@@ -167,7 +167,7 @@ public class Joueur {
     /**
      * Permet au joueur de montrer une de ses cartes en réponse à une suggestion.
      *
-     * Délègue l'opération au {@link Superviseur} qui valide le contexte de jeu
+     * Délègue l'opération au  Superviseur qui valide le contexte de jeu
      * et l'action avant de l'enregistrer.
      *
      *

@@ -46,9 +46,9 @@ public class Soupcon  {
      * une seconde réponse lèvera une exception.
      *
      *
-     * @param carte  la carte montrée par le joueur en réponse au soupçon, ne doit pas être {@code null}
-     * @param joueur le joueur qui montre la carte, ne doit pas être {@code null}
-     * @throws IllegalArgumentException   si {@code carte} ou {@code joueur} est {@code null}
+     * @param carte  la carte montrée par le joueur en réponse au soupçon, ne doit pas être  null
+     * @param joueur le joueur qui montre la carte, ne doit pas être  null
+     * @throws IllegalArgumentException   si  carte ou  joueur est  null
      * @throws ReponseDejaDonneeException si une réponse a déjà été enregistrée pour ce soupçon
      */
     public void enregistrerReponse(Carte carte, Joueur joueur) throws ReponseDejaDonneeException {

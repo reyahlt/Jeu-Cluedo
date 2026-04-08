@@ -33,7 +33,6 @@ public class Superviseur {
     private boolean partieDemarree;
     private static Superviseur instance;
 
-    /** État métier pour gérer un soupçon en plusieurs étapes. */
     private boolean modeSoupcon;
     private Soupcon soupconEnCours;
 
@@ -49,15 +48,14 @@ public class Superviseur {
 
     /**
      * Construit le Superviseur et initialise une nouvelle partie.
-     * <p>
+     *
      * Le Superviseur suit le pattern Singleton : une seule instance peut exister
      * à la fois. Toute tentative de créer un second Superviseur sans avoir
      * appelé {@link #reset()} au préalable lèvera une exception.
-     * </p>
-     * <p>
-     * La création du Superviseur réinitialise automatiquement la {@link Partie}
+     *
+     * La création du Superviseur réinitialise automatiquement la  Partie
      * afin de garantir un état de jeu propre.
-     * </p>
+     *
      *
      * @param plateau le plateau de jeu à utiliser, ne doit pas être {@code null}
      * @throws IllegalArgumentException si {@code plateau} est {@code null}
@@ -79,9 +77,6 @@ public class Superviseur {
         instance = this;
     }
 
-    // =========================================================================
-    // Gestion des joueurs
-    // =========================================================================
 
     /**
      * Ajoute un joueur à la partie avant son démarrage.
@@ -106,9 +101,6 @@ public class Superviseur {
         joueurs.add(new Joueur(nom, personnage));
     }
 
-    // =========================================================================
-    // Démarrage de la partie
-    // =========================================================================
 
     /**
      * Démarre la partie : tire l'énigme, distribue les 18 cartes, place les joueurs.
@@ -151,9 +143,6 @@ public class Superviseur {
             joueurs.get(i % n).ajouterCarte(cartes.get(i));
     }
 
-    // =========================================================================
-    // Tour de jeu
-    // =========================================================================
 
     /**
      * Retourne le joueur dont c'est le tour.
@@ -183,9 +172,6 @@ public class Superviseur {
         return joueurs.get(next);
     }
 
-    // =========================================================================
-    // Actions de jeu
-    // =========================================================================
 
     /**
      * Fait lancer les dés au joueur courant.
@@ -233,12 +219,12 @@ public class Superviseur {
 
     /**
      * Passe au joueur suivant devant réfuter le soupçon en cours.
-     * <p>
+     *
      * Si le joueur suivant est celui qui a émis le soupçon, cela signifie que
      * tous les joueurs ont été consultés sans qu'aucun n'ait pu réfuter.
      * Le mode soupçon est alors terminé sans réfutation.
      * Sinon, l'index du réfuteur courant est mis à jour vers le joueur suivant.
-     * </p>
+     *
      *
      * @throws PartieNonDemarreeException si la partie n'a pas encore été démarrée
      */
@@ -270,9 +256,10 @@ public class Superviseur {
         verifierPartieDemarree();
         verifierJoueurCourant(joueur);
 
-        /** if (joueur != getJoueurCourant()) {
+        // ce n'est pas le tour de joueur
+        if (joueur != getJoueurCourant()) {
          throw new ActionIllegaleException("Ce n'est pas le tour de " + joueur.getNom() + " !");
-         }**/
+         }
 
         // Le joueur est éliminé
         if (joueur.isElimine())
@@ -366,10 +353,10 @@ public class Superviseur {
 
     /**
      * Termine le tour du joueur courant et passe au joueur suivant non éliminé.
-     * <p>
+     *
      * Le tour suivant est attribué au prochain joueur actif dans l'ordre circulaire.
      * Les joueurs éliminés sont automatiquement ignorés lors du passage au tour suivant.
-     * </p>
+     *
      *
      * @param joueur le joueur souhaitant terminer son tour
      * @throws PartieNonDemarreeException si la partie n'a pas encore été démarrée
@@ -390,9 +377,6 @@ public class Superviseur {
         indexJoueurCourant = next;
     }
 
-    // =========================================================================
-    // Accesseurs
-    // =========================================================================
 
     /**
      * @return liste non modifiable des joueurs
@@ -434,9 +418,6 @@ public class Superviseur {
                 .findFirst().orElse(null);
     }
 
-    // =========================================================================
-    // Vérifications internes
-    // =========================================================================
 
     private void verifierPartieDemarree() throws PartieNonDemarreeException {
         if (!partieDemarree)
@@ -451,22 +432,22 @@ public class Superviseur {
 
     /**
      * Permet à un joueur de montrer une carte en réfutation d'un soupçon en cours.
-     * <p>
+     *
      * La méthode effectue plusieurs validations avant d'enregistrer la réponse :
-     * </p>
-     * <ul>
-     *   <li>La partie doit être démarrée et un soupçon doit être en cours.</li>
-     *   <li>Le joueur répondant ne peut pas être celui qui a émis le soupçon.</li>
-     *   <li>Seul le joueur désigné comme prochain réfuteur peut répondre.</li>
-     *   <li>Le joueur répondant ne doit pas être éliminé.</li>
-     *   <li>Si le joueur ne possède aucune carte montrable, il passe automatiquement
-     *       au réfuteur suivant en fournissant {@code null}.</li>
-     *   <li>La carte choisie doit appartenir au joueur et correspondre au soupçon.</li>
-     * </ul>
-     * <p>
+     *
+     *   La partie doit être démarrée et un soupçon doit être en cours.
+     *   Le joueur répondant ne peut pas être celui qui a émis le soupçon.
+     *
+     *   Seul le joueur désigné comme prochain réfuteur peut répondre.
+     *   Le joueur répondant ne doit pas être éliminé.
+     *   Si le joueur ne possède aucune carte montrable, il passe automatiquement
+     *       au réfuteur suivant en fournissant {@code null}.
+     *  La carte choisie doit appartenir au joueur et correspondre au soupçon.
+     *
+     *
      * Si la réfutation est valide, la réponse est enregistrée dans le soupçon en cours
      * et le mode soupçon est terminé.
-     * </p>
+     *
      *
      * @param repondant   le joueur qui répond au soupçon
      * @param carteChoisie la carte que le joueur souhaite montrer,
@@ -552,10 +533,10 @@ public class Superviseur {
 
     /**
      * Recherche et retourne une case libre appartenant à la pièce spécifiée sur le plateau.
-     * <p>
+     *
      * Parcourt l'intégralité du plateau (25 lignes × 24 colonnes) et retourne
      * la première case trouvée qui appartient à la pièce indiquée et qui est libre.
-     * </p>
+     *
      *
      * @param lieu la pièce dans laquelle chercher une case libre
      * @return la première {@link CaseCluedo} libre trouvée dans la pièce
@@ -576,11 +557,11 @@ public class Superviseur {
 
     /**
      * Déplace le joueur incarnant le personnage spécifié dans la pièce indiquée.
-     * <p>
+     *
      * Parcourt la liste des joueurs pour trouver celui qui incarne le personnage,
      * puis le place sur une case libre de la pièce cible.
      * Si aucun joueur n'incarne ce personnage, aucune action n'est effectuée.
-     * </p>
+     *
      *
      * @param personnage le personnage à déplacer
      * @param lieu       la pièce de destination dans laquelle placer le personnage
