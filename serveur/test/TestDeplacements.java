@@ -42,10 +42,6 @@ class TestDeplacements {
         alice.setDeplacementsRestants(1);
     }
 
-    // =========================================================
-    // Déplacement sans avoir lancé les dés
-    // =========================================================
-
     @Test
     void deplacementSansLancerDesDoitEchouer() throws Exception {
         alice.setCaseCourante(plateau.getCase(8, 7));
@@ -54,9 +50,6 @@ class TestDeplacements {
                 alice.deplacerVers(plateau.getCase(7, 7)));
     }
 
-    // =========================================================
-    // Déplacement vers case occupée
-    // =========================================================
 
     @Test
     void deplacementVersCaseOccupeeDoitEchouer() throws Exception {
@@ -69,9 +62,6 @@ class TestDeplacements {
                 alice.deplacerVers(plateau.getCase(9, 7)));
     }
 
-    // =========================================================
-    // Déplacement hors voisinage
-    // =========================================================
 
     @Test
     void deplacementHorsVoisinageDoitEchouer() throws Exception {
@@ -81,9 +71,6 @@ class TestDeplacements {
                 alice.deplacerVers(plateau.getCase(10, 7)));
     }
 
-    // =========================================================
-    // Déplacement nominal vers case voisine
-    // =========================================================
 
     @Test
     void deplacementNominalVersCaseVoisine() throws Exception {
@@ -103,9 +90,6 @@ class TestDeplacements {
         assertEquals(0, alice.getDeplacementsRestants());
     }
 
-    // =========================================================
-    // Déplacement quand plus de déplacement disponible
-    // =========================================================
 
     @Test
     void deplacementSansMouvementsRestantsDoitEchouer() throws Exception {
@@ -117,9 +101,6 @@ class TestDeplacements {
                 alice.deplacerVers(plateau.getCase(7, 7)));
     }
 
-    // =========================================================
-    // Entrée dans une pièce
-    // =========================================================
 
     @Test
     void entreeDansBibliothequeDepuis8_7Vers8_6() throws Exception {
@@ -130,9 +111,6 @@ class TestDeplacements {
         assertEquals("Bibliotheque", alice.getPieceActuelle().name());
     }
 
-    // =========================================================
-    // Déplacement intra-pièce (gratuit : même pièce)
-    // =========================================================
 
     @Test
     void deplacementDansMemePieceBibliothequeVers8_0() throws Exception {
@@ -145,9 +123,6 @@ class TestDeplacements {
         assertEquals("Bibliotheque", alice.getPieceActuelle().name());
     }
 
-    // =========================================================
-    // Entrée dans Bureau puis passage secret vers Cuisine
-    // =========================================================
 
     @Test
     void entreeDansBureauDepuis4_6() throws Exception {

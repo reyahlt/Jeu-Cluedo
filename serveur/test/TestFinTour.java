@@ -34,9 +34,6 @@ class TestFinTour {
         charles = superviseur.getJoueurParNom("Charles");
     }
 
-    // =========================================================
-    // Cas nominal : passage au joueur suivant
-    // =========================================================
 
     @Test
     void finirTourPasseABob() throws Exception {
@@ -58,10 +55,6 @@ class TestFinTour {
         superviseur.finirTour(charles);
         assertEquals("Alice", superviseur.getJoueurCourant().getNom());
     }
-
-    // =========================================================
-    // Fin de tour réinitialise l'état du joueur
-    // =========================================================
 
     @Test
     void finirTourReinitialiseDejaLanceDes() throws Exception {
@@ -101,9 +94,6 @@ class TestFinTour {
 
         assertFalse(alice.aSoupconne());
     }
-    // =========================================================
-    // Cas d'échec : ce n'est pas son tour
-    // =========================================================
 
     @Test
     void finirTourMauvaisJoueurDoitEchouer() {
@@ -111,9 +101,6 @@ class TestFinTour {
                 superviseur.finirTour(bob));
     }
 
-    // =========================================================
-    // Saut du joueur éliminé dans la rotation
-    // =========================================================
 
     @Test
     void joueurElimineSauteAuTourSuivant() throws Exception {

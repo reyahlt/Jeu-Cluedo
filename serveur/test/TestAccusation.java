@@ -38,9 +38,7 @@ class TestAccusation {
         charles = superviseur.getJoueurParNom("Charles");
     }
 
-    // =========================================================
-    // Cas d'échec : pas le tour du joueur
-    // =========================================================
+
 
     @Test
     void accuserMauvaisJoueurDoitEchouer() {
@@ -49,9 +47,7 @@ class TestAccusation {
                         ELieu.Cuisine, EArme.Corde));
     }
 
-    // =========================================================
-    // Accusation incorrecte : joueur éliminé
-    // =========================================================
+
 
     @Test
     void accusationIncorrectElimineLejoueur() throws Exception {
@@ -68,9 +64,6 @@ class TestAccusation {
         assertFalse(superviseur.getPartie().isTerminee());
     }
 
-    // =========================================================
-    // Accusation correcte : la partie se termine
-    // =========================================================
 
     @Test
     void accusationCorrecteTerminePartie() throws Exception {
@@ -87,9 +80,6 @@ class TestAccusation {
         assertEquals(alice, superviseur.getPartie().getGagnant());
     }
 
-    // =========================================================
-    // Accusation enregistrée dans l'historique
-    // =========================================================
 
     @Test
     void accusationEnregistreeDansHistorique() throws Exception {
@@ -101,10 +91,6 @@ class TestAccusation {
 
         assertEquals(1, superviseur.getPartie().getHistoriqueAccusations().size());
     }
-
-    // =========================================================
-    // Tous éliminés → partie terminée sans gagnant
-    // =========================================================
 
     @Test
     void tousJoueursEliminesTerminePartie() throws Exception {
@@ -126,9 +112,7 @@ class TestAccusation {
         assertNull(superviseur.getPartie().getGagnant());
     }
 
-    // =========================================================
-    // Helpers pour trouver une valeur différente de l'énigme
-    // =========================================================
+
 
     private EPersonnage trouverAutrePersonnage(EPersonnage enigmeP) {
         for (EPersonnage p : EPersonnage.values())

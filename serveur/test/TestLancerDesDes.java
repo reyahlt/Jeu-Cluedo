@@ -32,9 +32,6 @@ class TestLancerDesDes {
         bob   = superviseur.getJoueurParNom("Bob");
     }
 
-    // =========================================================
-    // Cas nominal
-    // =========================================================
 
     @Test
     void lancerDesResultatEntre2Et12() throws Exception {
@@ -55,9 +52,6 @@ class TestLancerDesDes {
         assertTrue(alice.DejaLanceLeDes());
     }
 
-    // =========================================================
-    // Cas d'échec : pas son tour
-    // =========================================================
 
     @Test
     void seulJoueurCourantPeutLancerLesDes() {
@@ -65,9 +59,6 @@ class TestLancerDesDes {
                 superviseur.lancerLesDes(bob));
     }
 
-    // =========================================================
-    // Cas d'échec : déjà lancé
-    // =========================================================
 
     @Test
     void joueurNePeutPasLancerDeuxFois() throws Exception {
@@ -77,9 +68,6 @@ class TestLancerDesDes {
                 superviseur.lancerLesDes(alice));
     }
 
-    // =========================================================
-    // Après fin de tour, le joueur suivant peut lancer
-    // =========================================================
 
     @Test
     void apresFinTourJoueurSuivantPeutLancer() throws Exception {
@@ -90,10 +78,6 @@ class TestLancerDesDes {
         int res = superviseur.lancerLesDes(bob);
         assertTrue(res >= 2 && res <= 12);
     }
-
-    // =========================================================
-    // Les deux dés ont chacun une valeur entre 1 et 6
-    // =========================================================
 
     @Test
     void chaqueDeDonne1A6() throws Exception {

@@ -22,9 +22,6 @@ class TestAjoutJoueur {
         superviseur = new Superviseur(plateau);
     }
 
-    // =========================================================
-    // Cas nominaux
-    // =========================================================
 
     @Test
     void ajoutJoueurNominal() throws Exception {
@@ -60,9 +57,6 @@ class TestAjoutJoueur {
         assertEquals(6, superviseur.getJoueurs().size());
     }
 
-    // =========================================================
-    // Cas d'échec : nom ou personnage déjà pris
-    // =========================================================
 
     @Test
     void ajoutJoueurNomDejaPrisDoitEchouer() throws Exception {
@@ -100,9 +94,6 @@ class TestAjoutJoueur {
                 superviseur.ajouterJoueur("Donald", EPersonnage.Reverend_Olive));
     }
 
-    // =========================================================
-    // Cas d'échec : dépassement du maximum
-    // =========================================================
 
     @Test
     void ajoutSetiemeJoueurDoitEchouer() throws Exception {

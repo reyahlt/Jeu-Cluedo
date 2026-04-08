@@ -23,9 +23,6 @@ class TestDemarragePartie {
         superviseur = new Superviseur(plateau);
     }
 
-    // =========================================================
-    // Cas d'échec : pas assez de joueurs
-    // =========================================================
 
     @Test
     void demarrageImpossibleSansJoueurs() {
@@ -61,9 +58,6 @@ class TestDemarragePartie {
                 superviseur.demarrerPartie());
     }
 
-    // =========================================================
-    // Cas nominal : 3 joueurs
-    // =========================================================
 
     @Test
     void demarragePartieNominal() throws Exception {
