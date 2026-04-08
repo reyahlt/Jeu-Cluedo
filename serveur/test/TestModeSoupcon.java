@@ -39,7 +39,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
         @Test
         void accuserPendantSoupconDoitEchouer() throws Exception {
             alice.setCaseCourante(superviseur.getPlateau().getCase(1, 1)); // Bureau
-            alice.soupconne(ELieu.Bureau, EPersonnage.Colonel_Moutarde, EArme.Corde);
+            alice.soupconne(EPersonnage.Colonel_Moutarde,ELieu.Bureau,  EArme.Corde);
 
             assertThrows(ActionIllegaleException.class, () ->
                     superviseur.accuser(alice, EPersonnage.Colonel_Moutarde, ELieu.Bureau, EArme.Corde));
@@ -48,7 +48,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
         @Test
         void finirTourPendantSoupconDoitEchouer() throws Exception {
             alice.setCaseCourante(superviseur.getPlateau().getCase(1, 1)); // Bureau
-            alice.soupconne(ELieu.Bureau, EPersonnage.Colonel_Moutarde, EArme.Corde);
+            alice.soupconne(EPersonnage.Colonel_Moutarde,ELieu.Bureau,  EArme.Corde);
 
             assertThrows(ActionIllegaleException.class, () ->
                     superviseur.finirTour(alice));
@@ -57,7 +57,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
         @Test
         void lancerDesPendantSoupconDoitEchouer() throws Exception {
             alice.setCaseCourante(superviseur.getPlateau().getCase(1, 1)); // Bureau
-            alice.soupconne(ELieu.Bureau, EPersonnage.Colonel_Moutarde, EArme.Corde);
+            alice.soupconne( EPersonnage.Colonel_Moutarde,ELieu.Bureau, EArme.Corde);
 
             assertThrows(ActionIllegaleException.class, () ->
                     superviseur.lancerLesDes(alice));
@@ -66,7 +66,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
         void deplacerPendantSoupconDoitEchouer() throws Exception {
             alice.setCaseCourante(superviseur.getPlateau().getCase(1, 1)); // Bureau
 
-            alice.soupconne(ELieu.Bureau, EPersonnage.Colonel_Moutarde, EArme.Corde);
+            alice.soupconne( EPersonnage.Colonel_Moutarde,ELieu.Bureau, EArme.Corde);
 
             assertThrows(ActionIllegaleException.class, () ->
                     superviseur.deplacerJoueur(alice, 2, 1)); // tentative de déplacement

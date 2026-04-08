@@ -40,7 +40,7 @@ class TestSoupcon {
     @Test
     void soupconnerHorsPieceDoitEchouer() {
         assertThrows(ActionIllegaleException.class, () ->
-                alice.soupconne(ELieu.Cuisine, EPersonnage.Colonel_Moutarde, EArme.Corde));
+                alice.soupconne( EPersonnage.Colonel_Moutarde,ELieu.Cuisine, EArme.Corde));
     }
 
     @Test
@@ -48,7 +48,7 @@ class TestSoupcon {
         alice.setCaseCourante(plateau.getCase(1, 1)); // Bureau
 
         assertThrows(ActionIllegaleException.class, () ->
-                alice.soupconne(ELieu.Cuisine, EPersonnage.Colonel_Moutarde, EArme.Corde));
+                alice.soupconne( EPersonnage.Colonel_Moutarde,ELieu.Cuisine, EArme.Corde));
     }
 
     @Test
@@ -56,16 +56,16 @@ class TestSoupcon {
         bob.setCaseCourante(plateau.getCase(1, 1)); // Bureau
 
         assertThrows(ActionIllegaleException.class, () ->
-                bob.soupconne(ELieu.Bureau, EPersonnage.Colonel_Moutarde, EArme.Corde));
+                bob.soupconne(EPersonnage.Colonel_Moutarde,ELieu.Bureau,  EArme.Corde));
     }
 
     @Test
     void soupconnerDeuxFoisMemeTourDoitEchouer() throws Exception {
         alice.setCaseCourante(plateau.getCase(1, 1)); // Bureau
-        alice.soupconne(ELieu.Bureau, EPersonnage.Colonel_Moutarde, EArme.Corde);
+        alice.soupconne(EPersonnage.Colonel_Moutarde,ELieu.Bureau,  EArme.Corde);
 
         assertThrows(ActionIllegaleException.class, () ->
-                alice.soupconne(ELieu.Bureau, EPersonnage.Reverend_Olive, EArme.Revolver));
+                alice.soupconne(EPersonnage.Reverend_Olive,ELieu.Bureau,  EArme.Revolver));
     }
 
     @Test
@@ -73,7 +73,7 @@ class TestSoupcon {
         alice.setCaseCourante(plateau.getCase(1, 1)); // Bureau
 
         assertDoesNotThrow(() ->
-                alice.soupconne(ELieu.Bureau, EPersonnage.Colonel_Moutarde, EArme.Corde));
+                alice.soupconne(EPersonnage.Colonel_Moutarde,ELieu.Bureau,  EArme.Corde));
 
         assertTrue(alice.aSoupconne());
     }
@@ -81,7 +81,7 @@ class TestSoupcon {
     @Test
     void soupconEnregistreDansHistorique() throws Exception {
         alice.setCaseCourante(plateau.getCase(1, 1)); // Bureau
-        alice.soupconne(ELieu.Bureau, EPersonnage.Colonel_Moutarde, EArme.Corde);
+        alice.soupconne( EPersonnage.Colonel_Moutarde,ELieu.Bureau, EArme.Corde);
 
         assertEquals(1, superviseur.getPartie().getHistoriqueSoupcons().size());
     }
@@ -92,13 +92,13 @@ class TestSoupcon {
         alice.setCaseCourante(plateau.getCase(1, 1)); // Bureau
 
         assertThrows(ActionIllegaleException.class, () ->
-                alice.soupconne(ELieu.Bureau, EPersonnage.Colonel_Moutarde, EArme.Corde));
+                alice.soupconne(EPersonnage.Colonel_Moutarde,ELieu.Bureau,  EArme.Corde));
     }
 
     @Test
     void deplacerPendantSoupconDoitEchouer() throws Exception {
         alice.setCaseCourante(plateau.getCase(1, 1)); // Bureau
-        alice.soupconne(ELieu.Bureau, EPersonnage.Colonel_Moutarde, EArme.Corde);
+        alice.soupconne( EPersonnage.Colonel_Moutarde,ELieu.Bureau, EArme.Corde);
 
         assertThrows(ActionIllegaleException.class, () ->
                 superviseur.deplacerJoueur(alice, 2, 1));
@@ -107,7 +107,7 @@ class TestSoupcon {
     @Test
     void finirTourPendantSoupconDoitEchouer() throws Exception {
         alice.setCaseCourante(plateau.getCase(1, 1)); // Bureau
-        alice.soupconne(ELieu.Bureau, EPersonnage.Colonel_Moutarde, EArme.Corde);
+        alice.soupconne(EPersonnage.Colonel_Moutarde,ELieu.Bureau,  EArme.Corde);
 
         assertThrows(ActionIllegaleException.class, () ->
                 superviseur.finirTour(alice));
@@ -116,7 +116,7 @@ class TestSoupcon {
     @Test
     void lancerDesPendantSoupconDoitEchouer() throws Exception {
         alice.setCaseCourante(plateau.getCase(1, 1)); // Bureau
-        alice.soupconne(ELieu.Bureau, EPersonnage.Colonel_Moutarde, EArme.Corde);
+        alice.soupconne(EPersonnage.Colonel_Moutarde,ELieu.Bureau,  EArme.Corde);
 
         assertThrows(ActionIllegaleException.class, () ->
                 superviseur.lancerLesDes(alice));
@@ -125,7 +125,7 @@ class TestSoupcon {
     @Test
     void accuserPendantSoupconDoitEchouer() throws Exception {
         alice.setCaseCourante(plateau.getCase(1, 1)); // Bureau
-        alice.soupconne(ELieu.Bureau, EPersonnage.Colonel_Moutarde, EArme.Corde);
+        alice.soupconne(EPersonnage.Colonel_Moutarde,ELieu.Bureau,  EArme.Corde);
 
         assertThrows(ActionIllegaleException.class, () ->
                 superviseur.accuser(alice, EPersonnage.Colonel_Moutarde, ELieu.Bureau, EArme.Corde));
@@ -138,7 +138,7 @@ class TestSoupcon {
         bob.viderCartes();
         charles.viderCartes();
 
-        alice.soupconne(ELieu.Bureau, EPersonnage.Colonel_Moutarde, EArme.Corde);
+        alice.soupconne(EPersonnage.Colonel_Moutarde,ELieu.Bureau,  EArme.Corde);
 
         assertTrue(alice.aSoupconne());
 
@@ -155,7 +155,7 @@ class TestSoupcon {
         bob.setCaseCourante(plateau.getCase(22, 22)); // Cuisine au départ du test
         alice.setCaseCourante(plateau.getCase(1, 1)); // Bureau
 
-        alice.soupconne(ELieu.Bureau, EPersonnage.Colonel_Moutarde, EArme.Corde);
+        alice.soupconne(EPersonnage.Colonel_Moutarde,ELieu.Bureau,  EArme.Corde);
 
         assertEquals(ELieu.Bureau, bob.getPieceActuelle());
     }
@@ -164,7 +164,7 @@ class TestSoupcon {
     void soupconDeplaceLArmeDansLaPiece() throws Exception {
         alice.setCaseCourante(plateau.getCase(1, 1)); // Bureau
 
-        alice.soupconne(ELieu.Bureau, EPersonnage.Colonel_Moutarde, EArme.Corde);
+        alice.soupconne(EPersonnage.Colonel_Moutarde,ELieu.Bureau,  EArme.Corde);
 
         assertEquals(ELieu.Bureau, superviseur.getPartie().getPositionArme(EArme.Corde));
     }

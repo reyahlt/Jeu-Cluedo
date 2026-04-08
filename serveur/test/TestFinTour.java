@@ -81,8 +81,8 @@ class TestFinTour {
         bob.viderCartes();
         charles.viderCartes();
 
-        alice.soupconne(cluedo.enums.ELieu.Bureau,
-                EPersonnage.Colonel_Moutarde,
+        alice.soupconne(EPersonnage.Colonel_Moutarde,cluedo.enums.ELieu.Bureau,
+
                 cluedo.enums.EArme.Corde);
 
         assertTrue(alice.aSoupconne());

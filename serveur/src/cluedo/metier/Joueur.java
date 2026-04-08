@@ -138,9 +138,14 @@ public class Joueur {
      * @throws PlateauCluedoException     si le déplacement du suspect vers le lieu désigné
      *                                    est impossible sur le plateau
      */
-    public void soupconne(ELieu lieu, EPersonnage suspect, EArme arme)
+    public void soupconne( EPersonnage suspect,ELieu lieu, EArme arme)
             throws ActionIllegaleException, PlateauCluedoException,  PartieNonDemarreeException {
         Superviseur.getInstance().soupconne(this, suspect, lieu, arme);
+    }
+
+    public void accuse(EPersonnage suspect,ELieu lieu, EArme arme)
+            throws ActionIllegaleException,  PartieNonDemarreeException {
+        Superviseur.getInstance().accuser(this, suspect, lieu, arme);
     }
 
     /**

@@ -43,8 +43,7 @@ class TestAccusation {
     @Test
     void accuserMauvaisJoueurDoitEchouer() {
         assertThrows(ActionIllegaleException.class, () ->
-                superviseur.accuser(bob, EPersonnage.Colonel_Moutarde,
-                        ELieu.Cuisine, EArme.Corde));
+                bob.accuse( EPersonnage.Colonel_Moutarde,ELieu.Cuisine, EArme.Corde));
     }
 
 
@@ -58,7 +57,7 @@ class TestAccusation {
         ELieu mauvaisLieu             = trouverAutreLieu(enigme.getLieu().getLieu());
         EArme mauvaiseArme            = trouverAutreArme(enigme.getArme().getArme());
 
-        superviseur.accuser(alice, mauvaisPersonnage, mauvaisLieu, mauvaiseArme);
+        alice.accuse(mauvaisPersonnage, mauvaisLieu, mauvaiseArme);
 
         assertTrue(alice.isElimine());
         assertFalse(superviseur.getPartie().isTerminee());

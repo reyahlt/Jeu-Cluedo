@@ -45,7 +45,7 @@ class TestMontrerCarte {
 
     private void aliceSoupconneDansBureau() throws Exception {
         alice.setCaseCourante(plateau.getCase(1, 1)); // Bureau
-        alice.soupconne(ELieu.Bureau, EPersonnage.Colonel_Moutarde, EArme.Corde);
+        alice.soupconne(EPersonnage.Colonel_Moutarde,ELieu.Bureau,  EArme.Corde);
     }
 
     @Test
