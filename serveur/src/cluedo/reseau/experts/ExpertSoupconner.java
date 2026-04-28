@@ -19,18 +19,33 @@ public class ExpertSoupconner extends ExpertMessage {
     @Override
     protected String executer(ConnexionJoueur connexion, ServeurCluedo serveur, String message) {
         try {
+            if (!connexion.estValide()) {
+                return "ERROR Non connecté";
+            }
+
             String[] mots = message.split(" ");
+
             EPersonnage personnage = EPersonnage.valueOf(mots[1]);
             ELieu lieu = ELieu.valueOf(mots[2]);
             EArme arme = EArme.valueOf(mots[3]);
 
             Joueur joueur = connexion.getJoueur();
-            if (joueur == null) return "ERROR Joueur non connecté";
+
             joueur.soupconne(personnage, lieu, arme);
 
-            serveur.diffuser("OK SOUPCON " + joueur.getNom() + " " +
-                    personnage.name() + " " + lieu.name() + " " + arme.name());
+            serveur.diffuser("OK SOUPCON " + joueur.getNom() + " "
+                    + personnage.name() + " " + lieu.name() + " " + arme.name());
+
+            Joueur refuteur = serveur.getSuperviseur().getJoueurDevantRefuter();
+
+            if (refuteur != null) {
+                serveur.diffuser("INFO ATTENTE_INDICE " + refuteur.getNom());
+            } else {
+                serveur.diffuser("INFO FIN_SOUPCON");
+            }
+
             return "";
+
         } catch (Exception e) {
             return "ERROR " + e.getMessage();
         }

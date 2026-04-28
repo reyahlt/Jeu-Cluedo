@@ -20,21 +20,29 @@ public class ExpertAccuser extends ExpertMessage {
     @Override
     protected String executer(ConnexionJoueur connexion, ServeurCluedo serveur, String message) {
         try {
+            if (!connexion.estValide()) {
+                return "ERROR Non connecté";
+            }
+
             String[] mots = message.split(" ");
+
             EPersonnage personnage = EPersonnage.valueOf(mots[1]);
             ELieu lieu = ELieu.valueOf(mots[2]);
             EArme arme = EArme.valueOf(mots[3]);
 
             Joueur joueur = connexion.getJoueur();
-            if (joueur == null) return "ERROR Joueur non connecté";
-            Accusation accusation = joueur.accuse(personnage, lieu, arme);
+
+            Accusation accusation = serveur.getSuperviseur().accuser(joueur, personnage, lieu, arme);
 
             if (accusation.isCorrecte()) {
                 serveur.diffuser("OK ACCUSATION_CORRECTE " + joueur.getNom());
             } else {
                 serveur.diffuser("OK ACCUSATION_FAUSSE " + joueur.getNom());
+                serveur.diffuser("INFO JOUEUR_ELIMINE " + joueur.getNom());
             }
+
             return "";
+
         } catch (Exception e) {
             return "ERROR " + e.getMessage();
         }
