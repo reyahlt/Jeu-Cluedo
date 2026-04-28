@@ -4,9 +4,9 @@ import cluedo.carte.Carte;
 import cluedo.carte.CarteArme;
 import cluedo.carte.CarteLieu;
 import cluedo.carte.CartePersonnage;
-import cluedo.enums.*;
-
-
+import cluedo.enums.EArme;
+import cluedo.enums.ELieu;
+import cluedo.enums.EPersonnage;
 
 import java.util.ArrayList;
 import java.util.Collections;

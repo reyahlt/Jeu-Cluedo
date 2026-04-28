@@ -6,7 +6,6 @@ import cluedo.enums.ELieu;
 import cluedo.enums.EPersonnage;
 import cluedo.plateau.CaseCluedo;
 import cluedo.plateau.PlateauCluedo;
-import exception.PlateauCluedoException;
 import exception.*;
 
 import java.util.ArrayList;
@@ -311,12 +310,7 @@ public class Superviseur {
         partie.enregistrerSoupcon(soupcon);
 
     }
-    public Joueur getJoueurDevantRefuter() {
-        if (!modeSoupcon || indexJoueurDevantRefuter < 0) {
-            return null;
-        }
-        return joueurs.get(indexJoueurDevantRefuter);
-    }
+
     /**
      * Formule une accusation finale.
      * Si correcte → la partie se termine, le joueur gagne.
@@ -425,7 +419,12 @@ public class Superviseur {
         }
         return null;
     }
-
+    public Joueur getJoueurDevantRefuter() {
+        if (!modeSoupcon || indexJoueurDevantRefuter < 0) {
+            return null;
+        }
+        return joueurs.get(indexJoueurDevantRefuter);
+    }
 
     private void verifierPartieDemarree() throws PartieNonDemarreeException {
         if (!partieDemarree)
