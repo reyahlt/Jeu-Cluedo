@@ -15,6 +15,7 @@ public class ExpertAllerVers extends ExpertMessage {
 
     @Override
     protected String executer(ConnexionJoueur connexion, ServeurCluedo serveur, String message) {
+
         try {
             String[] mots = message.split(" ");
             int ligne = Integer.parseInt(mots[1]);

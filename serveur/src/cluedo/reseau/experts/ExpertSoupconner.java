@@ -18,6 +18,7 @@ public class ExpertSoupconner extends ExpertMessage {
 
     @Override
     protected String executer(ConnexionJoueur connexion, ServeurCluedo serveur, String message) {
+
         try {
             if (!connexion.estValide()) {
                 return "ERROR Non connecté";

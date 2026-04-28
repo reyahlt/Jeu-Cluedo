@@ -11,6 +11,9 @@ public abstract class ExpertMessage {
     }
 
     public String traiter(ConnexionJoueur connexion, ServeurCluedo serveur, String message) {
+        if (serveur.getSuperviseur().getPartie().isTerminee()) {
+            return "ERROR Partie terminée";
+        }
         if (peutTraiter(message)) {
             return executer(connexion, serveur, message);
         }

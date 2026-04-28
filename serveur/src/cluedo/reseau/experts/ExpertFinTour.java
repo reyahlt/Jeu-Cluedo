@@ -15,6 +15,7 @@ public class ExpertFinTour extends ExpertMessage {
 
     @Override
     protected String executer(ConnexionJoueur connexion, ServeurCluedo serveur, String message) {
+
         try {
             Joueur joueur = connexion.getJoueur();
             if (joueur == null) return "ERROR Joueur non connecté";

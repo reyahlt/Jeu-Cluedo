@@ -10,7 +10,9 @@ import cluedo.reseau.protocole.ExpertMessage;
 import cluedo.reseau.socket.ConnexionJoueur;
 
 public class ExpertAccuser extends ExpertMessage {
-    private static final String REGEX = "^@ACCUSER [\\p{Alpha}_]+ [\\p{Alpha}_]+ [\\p{Alpha}_]+$";
+
+    private static final String REGEX =
+            "^@ACCUSER [\\p{Alpha}_]+ [\\p{Alpha}_]+ [\\p{Alpha}_]+$";
 
     @Override
     protected boolean peutTraiter(String message) {
@@ -18,7 +20,10 @@ public class ExpertAccuser extends ExpertMessage {
     }
 
     @Override
-    protected String executer(ConnexionJoueur connexion, ServeurCluedo serveur, String message) {
+    protected String executer(ConnexionJoueur connexion,
+                              ServeurCluedo serveur,
+                              String message) {
+
         try {
             if (!connexion.estValide()) {
                 return "ERROR Non connecté";
@@ -32,14 +37,22 @@ public class ExpertAccuser extends ExpertMessage {
 
             Joueur joueur = connexion.getJoueur();
 
-            Accusation accusation = serveur.getSuperviseur().accuser(joueur, personnage, lieu, arme);
+            Accusation accusation =
+                    serveur.getSuperviseur().accuser(joueur, personnage, lieu, arme);
 
+            // 🔥 CAS 1 : accusation correcte → FIN DE PARTIE
             if (accusation.isCorrecte()) {
+
                 serveur.diffuser("OK ACCUSATION_CORRECTE " + joueur.getNom());
-            } else {
-                serveur.diffuser("OK ACCUSATION_FAUSSE " + joueur.getNom());
-                serveur.diffuser("INFO JOUEUR_ELIMINE " + joueur.getNom());
+
+                serveur.diffuser("INFO PARTIE_TERMINEE GAGNANT " + joueur.getNom());
+
+                return "";
             }
+
+            // ❌ CAS 2 : accusation fausse
+            serveur.diffuser("OK ACCUSATION_FAUSSE " + joueur.getNom());
+            serveur.diffuser("INFO JOUEUR_ELIMINE " + joueur.getNom());
 
             return "";
 
