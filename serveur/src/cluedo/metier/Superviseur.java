@@ -311,7 +311,12 @@ public class Superviseur {
         partie.enregistrerSoupcon(soupcon);
 
     }
-
+    public Joueur getJoueurDevantRefuter() {
+        if (!modeSoupcon || indexJoueurDevantRefuter < 0) {
+            return null;
+        }
+        return joueurs.get(indexJoueurDevantRefuter);
+    }
     /**
      * Formule une accusation finale.
      * Si correcte → la partie se termine, le joueur gagne.
