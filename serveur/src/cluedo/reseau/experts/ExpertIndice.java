@@ -24,11 +24,13 @@ public class ExpertIndice extends ExpertMessage {
             String[] mots = message.split(" ");
             String nomCarte = mots[1];
 
-            Joueur joueur = connexion.getJoueur();
+            Joueur joueurQuiRepond = connexion.getJoueur();
+            Joueur joueurQuiASoupconne = serveur.getSuperviseur().getJoueurQuiASoupconne();
+
             Carte carteChoisie = null;
 
             if (!nomCarte.equalsIgnoreCase("RIEN")) {
-                for (Carte c : joueur.getCartes()) {
+                for (Carte c : joueurQuiRepond.getCartes()) {
                     if (c.getNom().equals(nomCarte)) {
                         carteChoisie = c;
                         break;
@@ -36,10 +38,10 @@ public class ExpertIndice extends ExpertMessage {
                 }
             }
 
-            Carte carteMontree = joueur.montrerCarte(carteChoisie);
+            Carte carteMontree = joueurQuiRepond.montrerCarte(carteChoisie);
 
             if (carteMontree == null) {
-                serveur.diffuser("INFO INDICE_RIEN " + joueur.getNom());
+                serveur.diffuser("INFO INDICE_RIEN " + joueurQuiRepond.getNom());
 
                 Joueur prochain = serveur.getSuperviseur().getJoueurDevantRefuter();
 
@@ -52,10 +54,27 @@ public class ExpertIndice extends ExpertMessage {
                 return "OK INDICE AUCUNE_CARTE";
             }
 
-            serveur.diffuserSauf(connexion, "INFO SOUPCON_REFUTE " + joueur.getNom());
+            ConnexionJoueur connexionSoupconneur = null;
+
+            if (joueurQuiASoupconne != null) {
+                connexionSoupconneur = serveur.getConnexionParPseudo(joueurQuiASoupconne.getNom());
+            }
+
+            if (connexionSoupconneur != null) {
+                connexionSoupconneur.envoyer("OK INDICE " + carteMontree.getNom());
+            }
+
+            connexion.envoyer("OK INDICE ENVOYE " + carteMontree.getNom());
+
+            for (ConnexionJoueur c : serveur.getConnexions()) {
+                if (c != connexion && c != connexionSoupconneur) {
+                    c.envoyer("INFO SOUPCON_REFUTE " + joueurQuiRepond.getNom());
+                }
+            }
+
             serveur.diffuser("INFO FIN_SOUPCON");
 
-            return "OK INDICE " + carteMontree.getNom();
+            return "";
 
         } catch (Exception e) {
             return "ERROR " + e.getMessage();
