@@ -26,7 +26,7 @@ public class ExpertDeconnexion extends ExpertMessage {
                     if (serveur.getSuperviseur().getJoueurCourant().equals(joueur)) {
                         serveur.getSuperviseur().finirTour(joueur);
 
-                        serveur.diffuser("INFO JOUEUR_COURANT "
+                        serveur.diffuser("Le Joueur Courant est : "
                                 + serveur.getSuperviseur().getJoueurCourant().getNom());
                     }
                 } catch (Exception ignored) {
@@ -38,10 +38,10 @@ public class ExpertDeconnexion extends ExpertMessage {
             serveur.supprimerConnexion(connexion);
 
             if (pseudo != null) {
-                serveur.diffuser("INFO " + pseudo + " s'est déconnecté");
+                serveur.diffuser( pseudo + " s'est déconnecté");
             }
 
-            connexion.envoyer("OK DECONNECTE");
+            connexion.envoyer("Tu es Deconnecté ");
             connexion.getThreadConnexion().fin();
 
             return "";

@@ -33,7 +33,7 @@ public class ThreadAcceptConnexion extends Thread {
                 ConnexionJoueur connexion = new ConnexionJoueur(socket, serveur);
                 serveur.ajouterConnexion(connexion);
 
-                connexion.envoyer("OK Connexion TCP établie. Identifiez-vous avec @CONNEXION pseudo personnage");
+                connexion.envoyer("Connexion établie. Identifiez-vous avec @CONNEXION pseudo personnage");
 
             } catch (IOException e) {
                 System.err.println("Erreur accept connexion : " + e.getMessage());

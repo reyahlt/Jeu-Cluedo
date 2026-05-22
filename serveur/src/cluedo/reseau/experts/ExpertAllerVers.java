@@ -25,7 +25,7 @@ public class ExpertAllerVers extends ExpertMessage {
             if (joueur == null) return "ERROR Joueur non connecté";
             serveur.getSuperviseur().deplacerJoueur(joueur, ligne, colonne);
 
-            serveur.diffuser("OK DEPLACEMENT " + joueur.getNom() + " " + ligne + " " + colonne);
+            serveur.diffuser("DEPLACEMENT " + joueur.getNom() + " VERS " + ligne + " " + colonne);
             return "";
         } catch (Exception e) {
             return "ERROR " + e.getMessage();

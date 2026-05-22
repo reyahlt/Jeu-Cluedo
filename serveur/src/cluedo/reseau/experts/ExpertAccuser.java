@@ -40,20 +40,22 @@ public class ExpertAccuser extends ExpertMessage {
             Accusation accusation =
                     serveur.getSuperviseur().accuser(joueur, personnage, lieu, arme);
 
-            // 🔥 CAS 1 : accusation correcte → FIN DE PARTIE
+
             if (accusation.isCorrecte()) {
 
-                serveur.diffuser("OK ACCUSATION_CORRECTE " + joueur.getNom());
+                serveur.diffuser("ACCUSATION_CORRECTE " + joueur.getNom());
 
-                serveur.diffuser("INFO PARTIE_TERMINEE GAGNANT " + joueur.getNom());
+                serveur.diffuser("La Partie est terminée et le Gagnant est : " + joueur.getNom());
 
                 return "";
             }
 
-            // ❌ CAS 2 : accusation fausse
-            serveur.diffuser("OK ACCUSATION_FAUSSE " + joueur.getNom());
-            serveur.diffuser("INFO JOUEUR_ELIMINE " + joueur.getNom());
 
+            serveur.diffuser("ACCUSATION_FAUSSE " + joueur.getNom());
+            serveur.diffuser(joueur.getNom()+" est éliminé " );
+            serveur.getSuperviseur().finirTour(joueur);
+            serveur.diffuser("FIN TOUR.\n  Joueur Courant : " +
+                    serveur.getSuperviseur().getJoueurCourant().getNom());
             return "";
 
         } catch (Exception e) {

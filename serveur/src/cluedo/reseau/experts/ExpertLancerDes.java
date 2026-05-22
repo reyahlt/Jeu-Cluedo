@@ -21,7 +21,7 @@ public class ExpertLancerDes extends ExpertMessage {
             Joueur joueur = connexion.getJoueur();
             if (joueur == null) return "ERROR Joueur non connecté";
             int res = serveur.getSuperviseur().lancerLesDes(joueur);
-            serveur.diffuser("OK DES " + joueur.getNom() + " " + res);
+            serveur.diffuser("Les Des de " + joueur.getNom() + " : " + res);
             return "";
         } catch (Exception e) {
             return "ERROR " + e.getMessage();

@@ -34,15 +34,15 @@ public class ExpertSoupconner extends ExpertMessage {
 
             joueur.soupconne(personnage, lieu, arme);
 
-            serveur.diffuser("OK SOUPCON " + joueur.getNom() + " "
+            serveur.diffuser("Le soupcon en cours :" + joueur.getNom() + " "
                     + personnage.name() + " " + lieu.name() + " " + arme.name());
 
             Joueur refuteur = serveur.getSuperviseur().getJoueurDevantRefuter();
 
             if (refuteur != null) {
-                serveur.diffuser("INFO ATTENTE_INDICE " + refuteur.getNom());
+                serveur.diffuser("En Attente d'indice " + refuteur.getNom());
             } else {
-                serveur.diffuser("INFO FIN_SOUPCON");
+                serveur.diffuser(" FIN_SOUPCON");
             }
 
             return "";

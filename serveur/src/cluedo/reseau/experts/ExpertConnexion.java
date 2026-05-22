@@ -32,8 +32,26 @@ public class ExpertConnexion extends ExpertMessage {
             serveur.getSuperviseur().ajouterJoueur(pseudo, personnage);
             connexion.setPseudo(pseudo);
             connexion.setValide(true);
-            serveur.diffuser("INFO " + pseudo + " a rejoint la partie avec " + personnage.name());
-            return "OK CONNECTE " + pseudo;
+            serveur.diffuser(" " + pseudo + " a rejoint la partie avec " + personnage.name());
+            // envoyer au nouveau client tous les joueurs déjà connectés
+            serveur.getSuperviseur().getJoueurs().forEach(joueur -> {
+                connexion.envoyer(
+                        "INFO " + joueur.getNom()
+                                + " a rejoint la partie avec "
+                                + joueur.getPersonnage().name()
+                );
+            });
+
+            // informer tous les clients du nouveau joueur
+            serveur.diffuser(
+                    "INFO " + pseudo
+                            + " a rejoint la partie avec "
+                            + personnage.name()
+            );
+
+
+
+            return "CONNEXION_REUSSIE";
         } catch (IllegalArgumentException e) {
             return "ERROR Personnage invalide";
         } catch (JoueurDejaExistantException | PartieDejaDemarreeException e) {

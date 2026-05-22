@@ -229,7 +229,7 @@ public class Superviseur {
      */
     private void passerAuRefuteurSuivant() throws PartieNonDemarreeException {
         Joueur actuel = joueurs.get(indexJoueurDevantRefuter);
-        Joueur suivant = getJoueurSuivant(actuel);
+        Joueur suivant = getJoueurSuivantPourRefuter(actuel);
 
         if (suivant == joueurs.get(indexJoueurSoupcon)) {
             terminerModeSoupcon();
@@ -425,6 +425,13 @@ public class Superviseur {
         }
         return joueurs.get(indexJoueurDevantRefuter);
     }
+    public Joueur getJoueurSuivantPourRefuter(Joueur joueur) throws PartieNonDemarreeException {
+        verifierPartieDemarree();
+        int index = joueurs.indexOf(joueur);
+        if (index == -1) throw new IllegalArgumentException("Joueur inconnu : " + joueur.getNom());
+        int next = (index + 1) % joueurs.size();
+        return joueurs.get(next);
+    }
 
     private void verifierPartieDemarree() throws PartieNonDemarreeException {
         if (!partieDemarree)
@@ -489,10 +496,10 @@ public class Superviseur {
         }
 
         // Le joueur est éliminé
-        if (repondant.isElimine()) {
+     /**   if (repondant.isElimine()) {
             throw new ActionIllegaleException(
                     repondant.getNom() + " est éliminé et ne peut pas répondre.");
-        }
+        }**/
         ArrayList<Carte> cartesMontrables = repondant.cartesMontrables(soupconEnCours);
 
 

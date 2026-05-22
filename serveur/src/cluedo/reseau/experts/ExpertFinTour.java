@@ -20,8 +20,8 @@ public class ExpertFinTour extends ExpertMessage {
             Joueur joueur = connexion.getJoueur();
             if (joueur == null) return "ERROR Joueur non connecté";
             serveur.getSuperviseur().finirTour(joueur);
-            serveur.diffuser("OK FIN_TOUR JOUEUR_COURANT " +
-                    serveur.getSuperviseur().getJoueurCourant().getNom());
+            serveur.diffuser("FIN TOUR.\n  Joueur Courant : " +
+                    serveur.getSuperviseur().getJoueurCourant().getNom() );
             return "";
         } catch (Exception e) {
             return "ERROR " + e.getMessage();

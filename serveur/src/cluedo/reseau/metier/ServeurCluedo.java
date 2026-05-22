@@ -93,9 +93,6 @@ public class ServeurCluedo {
 
     public String traiterMessage(ConnexionJoueur connexion, String message) {
         if (message == null) {
-            if (connexion.getPseudo() != null) {
-                diffuser("INFO " + connexion.getPseudo() + " s'est déconnecté");
-            }
             supprimerConnexion(connexion);
             return null;
         }
@@ -108,14 +105,13 @@ public class ServeurCluedo {
         }
     }
 
-    public void diffuserSauf(ConnexionJoueur emetteur, String message) {
+    public void diffuserSauf(ConnexionJoueur ex1, ConnexionJoueur ex2, String message) {
         for (ConnexionJoueur c : getConnexions()) {
-            if (c != emetteur) {
+            if (c != ex1 && c != ex2) {
                 c.envoyer(message);
             }
         }
     }
-
     public Joueur getJoueurDepuisConnexion(ConnexionJoueur connexion) {
         if (connexion.getPseudo() == null) {
             return null;

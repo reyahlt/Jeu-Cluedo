@@ -23,7 +23,7 @@ public class ExpertDemarrer extends ExpertMessage {
 
             serveur.getSuperviseur().demarrerPartie();
 
-            serveur.diffuser("OK PARTIE_DEMARREE JOUEUR_COURANT "
+            serveur.diffuser("La partie demmare et le joueur courant est : "
                     + serveur.getSuperviseur().getJoueurCourant().getNom());
 
             for (ConnexionJoueur c : serveur.getConnexions()) {
@@ -36,7 +36,7 @@ public class ExpertDemarrer extends ExpertMessage {
                         cartes.append(carte.getNom()).append(" ");
                     }
 
-                    c.envoyer("OK TES_CARTES " + cartes.toString().trim());
+                    c.envoyer("Tes cartes sont :" + cartes.toString().trim());
                 }
             }
 
