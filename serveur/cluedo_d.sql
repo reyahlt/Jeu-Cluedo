@@ -1,0 +1,24 @@
+CREATE DATABASE IF NOT EXISTS cluedo_db;
+USE cluedo_db;
+
+CREATE TABLE IF NOT EXISTS JOUEUR (
+    id  INT AUTO_INCREMENT PRIMARY KEY,
+    nom VARCHAR(50) NOT NULL UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS CARTE (
+    id   INT AUTO_INCREMENT PRIMARY KEY,
+    nom  VARCHAR(50) NOT NULL UNIQUE,
+    type VARCHAR(20) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS INDICE (
+    id          INT AUTO_INCREMENT PRIMARY KEY,
+    joueur_id   INT NOT NULL,
+    carte_id    INT NOT NULL,
+    statut      VARCHAR(20) NOT NULL,
+    soupconneur VARCHAR(50),
+    UNIQUE KEY unique_indice (joueur_id, carte_id, soupconneur),
+    FOREIGN KEY (joueur_id) REFERENCES JOUEUR(id),
+    FOREIGN KEY (carte_id)  REFERENCES CARTE(id)
+);
