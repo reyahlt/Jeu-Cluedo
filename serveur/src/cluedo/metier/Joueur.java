@@ -120,7 +120,7 @@ public class Joueur {
             nvlCase.occuper(this);
     }
 
-    public void eliminer() { this.elimine = true; }
+    public void eliminer() { this.elimine = true;}
 
     /**
      * Émet un soupçon au nom du joueur en désignant un suspect, un lieu et une arme.
