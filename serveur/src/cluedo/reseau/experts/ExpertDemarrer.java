@@ -39,6 +39,11 @@ public class ExpertDemarrer extends ExpertMessage {
                     c.envoyer("Tes cartes sont :" + cartes.toString().trim());
                 }
             }
+            StringBuilder listeJoueurs = new StringBuilder("Liste des Joueurs (dans l'ordre)");
+            for (Joueur j : serveur.getSuperviseur().getJoueurs()) {
+                listeJoueurs.append(" ").append(j.getNom());
+            }
+            serveur.diffuser(listeJoueurs.toString());
 
             return "";
 
