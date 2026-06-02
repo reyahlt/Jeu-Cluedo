@@ -1,5 +1,6 @@
 package cluedo.reseau.experts;
 
+import cluedo.bd.IndiceDAO;
 import cluedo.metier.Joueur;
 import cluedo.reseau.metier.ServeurCluedo;
 import cluedo.reseau.protocole.ExpertMessage;
@@ -19,8 +20,10 @@ public class ExpertDeconnexion extends ExpertMessage {
             String pseudo = connexion.getPseudo();
             Joueur joueur = connexion.getJoueur();
 
+
             if (joueur != null) {
                 try {
+                    joueur.eliminer();
                     // Si le joueur déconnecté est le joueur courant,
                     // on essaie de passer automatiquement au joueur suivant.
                     if (serveur.getSuperviseur().getJoueurCourant().equals(joueur)) {
@@ -40,6 +43,8 @@ public class ExpertDeconnexion extends ExpertMessage {
             if (pseudo != null) {
                 serveur.diffuser( pseudo + " s'est déconnecté");
             }
+
+
 
             connexion.envoyer("Tu es Deconnecté ");
             connexion.getThreadConnexion().fin();

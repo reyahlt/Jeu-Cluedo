@@ -18,7 +18,7 @@ public class Superviseur {
      * Positions de départ des joueurs (ligne, colonne), dans l'ordre d'inscription.
      */
     public static final int[][] CASES_DEPART = {
-            {3, 3}, {3, 3}, {3, 3}, {18, 0}, {24, 9}, {24, 14}
+            {0, 16}, {5, 0}, {7, 23}, {18, 0}, {24, 9}, {24, 14}
     };
 
     public static final int MIN_JOUEURS = 3;
@@ -44,7 +44,9 @@ public class Superviseur {
         return instance;
     }
 
-
+    public Soupcon getSoupconEnCours() {
+        return soupconEnCours;
+    }
     /**
      * Construit le Superviseur et initialise une nouvelle partie.
      *

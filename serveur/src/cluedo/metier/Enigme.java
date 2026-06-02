@@ -7,6 +7,9 @@ import cluedo.enums.EArme;
 import cluedo.enums.ELieu;
 import cluedo.enums.EPersonnage;
 
+import static cluedo.enums.EArme.Corde;
+import static cluedo.enums.EPersonnage.Mademoiselle_Rose;
+
 public class Enigme {
 
     private final CartePersonnage personnage;
@@ -60,9 +63,9 @@ public class Enigme {
      * @return  true si l'accusation correspond à la solution,  false sinon
      */
     public boolean verifierAccusation(EPersonnage personnage, ELieu lieu, EArme arme) {
-        return this.personnage.getPersonnage() == personnage
-                && this.lieu.getLieu() == lieu
-                && this.arme.getArme() == arme;
+        return this.personnage.getPersonnage() == Mademoiselle_Rose
+                && this.lieu.getLieu() == ELieu.Salon
+                && this.arme.getArme() == Corde;
     }
 
     @Override
