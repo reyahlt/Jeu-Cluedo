@@ -1,6 +1,5 @@
 package cluedo.reseau.experts;
 
-import cluedo.bd.IndiceDAO;
 import cluedo.metier.Joueur;
 import cluedo.reseau.metier.ServeurCluedo;
 import cluedo.reseau.protocole.ExpertMessage;
@@ -20,31 +19,44 @@ public class ExpertDeconnexion extends ExpertMessage {
             String pseudo = connexion.getPseudo();
             Joueur joueur = connexion.getJoueur();
 
-
             if (joueur != null) {
                 try {
-                    joueur.eliminer();
-                    // Si le joueur déconnecté est le joueur courant,
-                    // on essaie de passer automatiquement au joueur suivant.
-                    if (serveur.getSuperviseur().getJoueurCourant().equals(joueur)) {
+
+                    boolean etaitJoueurCourant =
+                            serveur.getSuperviseur().getJoueurCourant().equals(joueur);
+
+                    // supprimer le joueur de la liste
+                    serveur.getSuperviseur().getJoueurs().remove(joueur);
+
+                    // si c'était son tour -> joueur suivant
+                    if (etaitJoueurCourant
+                            && !serveur.getSuperviseur().getJoueurs().isEmpty()) {
+
                         serveur.getSuperviseur().finirTour(joueur);
 
                         serveur.diffuser("Le Joueur Courant est : "
                                 + serveur.getSuperviseur().getJoueurCourant().getNom());
                     }
+
                 } catch (Exception ignored) {
-                    // Si la partie n'est pas démarrée, ou si un soupçon est en cours,
-                    // on ne bloque pas la déconnexion.
+                    // ne bloque pas la déconnexion
                 }
             }
 
             serveur.supprimerConnexion(connexion);
 
             if (pseudo != null) {
-                serveur.diffuser( pseudo + " s'est déconnecté");
+                serveur.diffuser(pseudo + " s'est déconnecté");
             }
+            try {
+                if (!serveur.getSuperviseur().getJoueurs().isEmpty()
+                        && serveur.getSuperviseur().getJoueurCourant() != null) {
 
-
+                    serveur.diffuser("Le Joueur Courant est : "
+                            + serveur.getSuperviseur().getJoueurCourant().getNom());
+                }
+            } catch (Exception ignored) {
+            }
 
             connexion.envoyer("Tu es Deconnecté ");
             connexion.getThreadConnexion().fin();

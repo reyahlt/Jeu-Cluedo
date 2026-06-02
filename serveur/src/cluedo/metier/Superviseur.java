@@ -44,9 +44,7 @@ public class Superviseur {
         return instance;
     }
 
-    public Soupcon getSoupconEnCours() {
-        return soupconEnCours;
-    }
+
     /**
      * Construit le Superviseur et initialise une nouvelle partie.
      *
@@ -122,12 +120,22 @@ public class Superviseur {
         distribuerCartes(distribuables);
 
         // Placer les joueurs sur leurs cases de départ
-        for (int i = 0; i < joueurs.size(); i++) {
+        for (Joueur joueur : joueurs) {
             try {
-                CaseCluedo caseDepart = plateau.getCase(CASES_DEPART[i][0], CASES_DEPART[i][1]);
-                joueurs.get(i).setCaseCourante(caseDepart);
+                int indexPersonnage = joueur.getPersonnage().ordinal();
+
+                CaseCluedo caseDepart = plateau.getCase(
+                        CASES_DEPART[indexPersonnage][0],
+                        CASES_DEPART[indexPersonnage][1]
+                );
+
+                joueur.setCaseCourante(caseDepart);
+
             } catch (PlateauCluedoException e) {
-                throw new IllegalStateException("Case de départ invalide pour le joueur " + i + " : " + e.getMessage());
+                throw new IllegalStateException(
+                        "Case de départ invalide pour le joueur "
+                                + joueur.getNom() + " : " + e.getMessage()
+                );
             }
         }
 
@@ -259,8 +267,8 @@ public class Superviseur {
 
         // ce n'est pas le tour de joueur
         if (joueur != getJoueurCourant()) {
-         throw new ActionIllegaleException("Ce n'est pas le tour de " + joueur.getNom() + " !");
-         }
+            throw new ActionIllegaleException("Ce n'est pas le tour de " + joueur.getNom() + " !");
+        }
 
         // Le joueur est éliminé
         if (joueur.isElimine())
@@ -383,7 +391,7 @@ public class Superviseur {
      * @return liste non modifiable des joueurs
      */
     public List<Joueur> getJoueurs() {
-        return Collections.unmodifiableList(joueurs);
+        return joueurs;
     }
 
     /**
@@ -498,10 +506,10 @@ public class Superviseur {
         }
 
         // Le joueur est éliminé
-     /**   if (repondant.isElimine()) {
-            throw new ActionIllegaleException(
-                    repondant.getNom() + " est éliminé et ne peut pas répondre.");
-        }**/
+        /**   if (repondant.isElimine()) {
+         throw new ActionIllegaleException(
+         repondant.getNom() + " est éliminé et ne peut pas répondre.");
+         }**/
         ArrayList<Carte> cartesMontrables = repondant.cartesMontrables(soupconEnCours);
 
 
