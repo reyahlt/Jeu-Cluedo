@@ -1,5 +1,5 @@
 package cluedo.reseau.experts;
-import cluedo.bd.IndiceDAO; //ajouter
+
 import cluedo.enums.EPersonnage;
 import cluedo.reseau.metier.ServeurCluedo;
 import cluedo.reseau.protocole.ExpertMessage;
@@ -32,21 +32,17 @@ public class ExpertConnexion extends ExpertMessage {
             serveur.getSuperviseur().ajouterJoueur(pseudo, personnage);
             connexion.setPseudo(pseudo);
             connexion.setValide(true);
-
-            IndiceDAO dao = new IndiceDAO();
-            dao.ajouterJoueur(pseudo);
-
-            serveur.diffuser(" " + pseudo + " a rejoint la partie avec " + personnage.name());
             // envoyer au nouveau client tous les joueurs déjà connectés
             serveur.getSuperviseur().getJoueurs().forEach(joueur -> {
-                connexion.envoyer(
-                        "INFO " + joueur.getNom()
-                                + " a rejoint la partie avec "
-                                + joueur.getPersonnage().name()
-                );
+                if (!joueur.getNom().equals(pseudo)) {
+                    connexion.envoyer(
+                            "INFO " + joueur.getNom()
+                                    + " a rejoint la partie avec "
+                                    + joueur.getPersonnage().name()
+                    );
+                }
             });
 
-            // informer tous les clients du nouveau joueur
             serveur.diffuser(
                     "INFO " + pseudo
                             + " a rejoint la partie avec "
