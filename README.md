@@ -1,6 +1,6 @@
-Jeu Cluedo
+# Jeu Cluedo
 
-Description
+## Description
 
 Le projet consiste à développer une version du jeu Cluedo permettant à plusieurs joueurs de participer à une partie.
 
@@ -12,7 +12,7 @@ Sockets pour la communication entre les joueurs
 Maven pour la gestion du projet
 Base de données pour la gestion des informations du jeu```
 
-Fonctionnalités
+## Fonctionnalités
 Création et gestion d'une partie
 Gestion des joueurs
 Gestion des personnages et des cartes
