@@ -1,0 +1,7 @@
+.idea/
+target/
+*.class
+.DS_Store
+hs_err_pid*.log
+*.iml
+cluedointerface/lib/
